@@ -1,0 +1,40 @@
+export const navigation: AsideNavLink[] = [
+    {
+        group: 'Main',
+        title: 'Overview',
+        access: () => true,
+        route: () => '/',
+        icon: 'solar:home-2-line-duotone',
+	},
+    {
+        group: 'Main',
+        title: 'Users',
+        access: () => true,
+        route: () => '/accounts',
+        icon: 'solar:home-2-line-duotone',
+	},
+    {
+        group: 'Main',
+        title: 'Traders',
+        access: () => true,
+        route: () => '/traders',
+        comming: true,
+        icon: 'solar:home-2-line-duotone',
+	},
+    // {
+    //     group: 'Balance',
+    //     title: 'Assets',
+    //     access: () => true,
+    //     route: () => '/assets',
+    //     icon: 'solar:home-2-line-duotone',
+    //     comming: true,
+	// },
+    // {
+    //     group: 'Balance',
+    //     title: 'History',
+    //     access: () => true,
+    //     route: () => '/history',
+    //     icon: 'solar:home-2-line-duotone',
+    //     comming: true,
+	// },
+];

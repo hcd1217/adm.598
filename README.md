@@ -1,1 +1,1 @@
-# adm.598
+# Frontend Admin Template (React, Vite, TypeScript)
