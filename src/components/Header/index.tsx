@@ -1,8 +1,8 @@
-import { ActionIcon, Group, Stack, Text } from '@mantine/core';
+import { ActionIcon, Divider, Group, Stack, Text } from '@mantine/core';
 import {IconLogout,} from "@tabler/icons-react";
 import styles from './styles.module.css';
 import { useAuthStore } from '@/store/auth.store';
-import AsideDivider from '../AsideDivider';
+
 
 export default function Header() {
     const logout = useAuthStore((state) => state.logout);
@@ -31,7 +31,7 @@ export default function Header() {
                 {/* Context Navigation */}
             </Stack>
         </Stack>
-        <AsideDivider/>
+        <Divider/>
         </>
     );
 }

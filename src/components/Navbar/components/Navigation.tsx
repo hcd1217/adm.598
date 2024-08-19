@@ -1,21 +1,22 @@
 import { useMemo } from 'react';
-
 import AsideDivider from '@/components/AsideDivider';
 import AsideNavLink from '@/components/AsideNavLink';
 import { sidebar } from '@/constants/ui';
 import getGroupRoutes from '@/helpers/getGroupRoutes';
 import { useAuthStore } from '@/store/auth.store';
-import { Group, ScrollArea, Stack, Text } from '@mantine/core';
+import { ActionIcon, Box, Group, ScrollArea, Stack, Text } from '@mantine/core';
+import { IconLogout } from '@tabler/icons-react';
 
 export default function Navigation() {
     const user = useAuthStore((state) => state.user);
+    const logout = useAuthStore((state) => state.logout);
     const routes = useMemo(() => getGroupRoutes(user), [user]);
-
+    console.log(routes)
     const withSpacer = (groupIndex: number) => (groupIndex === 0 ? 0 : 16);
 
     return (
-        <ScrollArea.Autosize mah={'calc(100vh - 86px)'} pb={24}>
-            <Stack gap={0} maw={sidebar.width}>
+        <>
+            <Stack justify='space-between' gap={0} maw={sidebar.width} h={"100%"}>
                 {routes.map((routeGroup, groupIdx) => (
                     <Stack key={groupIdx} gap={0} mt={withSpacer(groupIdx)}>
                         {!!withSpacer(groupIdx) && <AsideDivider mx={8} />}
@@ -31,7 +32,19 @@ export default function Navigation() {
                         </Stack>
                     </Stack>
                 ))}
+                <Box p={"md"}>
+                    <Group gap={5} mt={"atuo"} ml={'auto'} onClick={logout} styles={{
+                        root: {
+                            cursor: "pointer"
+                        }
+                    }}>
+                        <ActionIcon variant='transparent'>
+                            <IconLogout color='orange' />
+                        </ActionIcon>
+                        <Text c={"dimmed"} size='xs'>Sign Out</Text>
+                    </Group>
+                </Box>
             </Stack>
-        </ScrollArea.Autosize>
+        </>
     );
 }

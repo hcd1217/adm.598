@@ -1,10 +1,11 @@
 import { identify, login, register } from '@/services/auth';
+import { AuthenticationPayload } from '@/types/common';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 interface IAuthStore {
     loading: boolean;
-    user: null | any;
+    user: null | AuthenticationPayload;
     setUser: (user: any | null) => void;
     setLoading: (loading: boolean) => void;
     register: (form: any) => Promise<void>;
@@ -56,9 +57,14 @@ export const useAuthStore = create<IAuthStore>()(
                 setLoading(true);
 
                 try {
-                    const { token } = await login(form);
-                    localStorage.setItem('token', token);
-                    await auth();
+                    const data = await login(form);
+                    console.log("RES", data)
+                    if (data.result.token) {
+                        const { token } = data.result
+                        localStorage.setItem('token', token);
+                        await auth();
+                    }
+
                 } catch (e) {
                     if (e instanceof Error) {
                         throw e;

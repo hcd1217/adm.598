@@ -2,6 +2,7 @@ interface ApiResponse<T> {
     success: boolean;
     statusCode: number;
     data: T;
+    result: T
 }
 
 interface ApiResponseList<T> {

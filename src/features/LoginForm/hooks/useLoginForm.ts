@@ -14,14 +14,21 @@ export default function useLoginForm() {
     const form = useForm({
         validate: zodResolver(schema),
         initialValues: {
-            email: 'viet@mailinator.com',
-            password: '123456@aA',
+            email: 'alice@spe.com',
+            password: 'M4sT5RS3cr3tP4ssw0rd',
+            type: 1,
+            mfaCode: ""
         },
     });
 
     const onSubmit = form.onSubmit(async (data) => {
         try {
-            await login(data);
+            await login({
+                email: data.email,
+                mfaCode: data.mfaCode,
+                password: data.password,
+                type: data.type
+            });
         } catch (e: any) {
             if (e?.response?.data?.code === 2) {
                 form.setFieldError('email', 'User not found');

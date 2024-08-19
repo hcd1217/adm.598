@@ -6,6 +6,8 @@ export const booleanSchema = z.boolean();
 
 export const stringSchema = z.string();
 
+export const emailSchema = z.string().email();
+
 export const numberSchema = z.number();
 
 export const optionalNumberSchema = z.number().optional();
@@ -14,32 +16,9 @@ export const optionalStringSchema = stringSchema.optional();
 
 export const speNumberSchema = stringSchema.or(numberSchema);
 
-export const nullableSpeNumberSchema = speNumberSchema.or(z.null()).transform((val) => val ?? 0);
-
-export const binanceOrderParamSchema = z.object({
-  isSpot: booleanSchema,
-  orderIds: stringSchema.array().min(1),
-  symbol: stringSchema,
-  side: z.enum(["BUY", "SELL"]),
-  type: z.enum(["MARKET", "LIMIT"]),
-  volume: speNumberSchema,
-  price: speNumberSchema.optional(),
-  reduceOnly: booleanSchema.optional(),
-});
-
-export const binanceCancelOrderParamSchema = z.object({
-  isSpot: booleanSchema,
-  symbol: stringSchema,
-  orderId: stringSchema,
-});
-
-export const binanceModifyOrderParamSchema = z.object({
-  orderId: stringSchema,
-  symbol: stringSchema,
-  side: z.enum(["BUY", "SELL"]),
-  volume: speNumberSchema,
-  price: speNumberSchema,
-});
+export const nullableSpeNumberSchema = speNumberSchema
+  .or(z.null())
+  .transform((val) => val ?? 0);
 
 export const limitSchema = stringSchema
   .or(numberSchema)
@@ -62,7 +41,6 @@ export const txSchema = stringSchema;
 
 export const chainSchema = z.enum([
   "Ethereum",
-  "Binance Smart Chain",
   "TRON network",
   "Bitcoin",
 ]);

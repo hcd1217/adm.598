@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react';
 export default function Page({ children }: PropsWithChildren) {
     return (
         <Stack gap={0} className={styles.page__wrapper}>
-            <ScrollArea.Autosize>{children}</ScrollArea.Autosize>
+            <ScrollArea.Autosize py={20}>{children}</ScrollArea.Autosize>
         </Stack>
     );
 }
