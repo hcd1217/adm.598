@@ -2,27 +2,25 @@ import { IconGauge, IconLock, IconUsers } from "@tabler/icons-react";
 
 export const navigation: AsideNavLink[] = [
   {
-    group: 'Main',
-    title: 'Dashboard',
+    group: "Main",
+    title: "Dashboard",
     access: () => true,
-    route: () => '/',
+    route: () => "/",
     icon: IconGauge,
   },
   {
-    group: 'Main',
-    title: 'Users',
+    group: "Main",
+    title: "Users",
     access: () => true,
-    route: () => '/users',
+    route: () => "/users",
     icon: IconUsers,
   },
   {
-    group: 'Main',
-    title: 'Traders',
+    group: "Main",
+    title: "Traders",
     access: () => true,
-    route: () => '/traders',
+    route: () => "/traders",
     comming: true,
     icon: IconLock,
   },
-  
 ];
-

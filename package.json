@@ -2,23 +2,15 @@
     "name": "frontend-admin-template",
     "version": "0.0.0",
     "private": true,
-    "type": "module",
     "scripts": {
         "build": "tsc && vite build",
         "commit": "cz",
         "dev": "vite",
-        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "static:check": "eslint src && prettier --check src",
+        "static:fix": "eslint src --fix && prettier --write src",
         "preview": "vite preview",
         "release": "commit-and-tag-version",
         "prepare": "husky install"
-    },
-    "lint-staged": {
-        "*.{ts,tsx}": "eslint --cache --fix"
-    },
-    "config": {
-        "commitizen": {
-            "path": "./node_modules/cz-conventional-changelog"
-        }
     },
     "dependencies": {
         "@fontsource/ubuntu": "^5.0.8",
@@ -46,6 +38,8 @@
         "dayjs": "^1.11.10",
         "embla-carousel-react": "^7.1.0",
         "localforage": "^1.10.0",
+        "lodash": "^4.17.21",
+        "mantine-datatable": "^7.11.3",
         "mantine-form-zod-resolver": "^1.1.0",
         "match-sorter": "^6.3.1",
         "million": "^2.6.4",
@@ -59,6 +53,7 @@
         "zustand": "^4.4.7"
     },
     "devDependencies": {
+        "@faker-js/faker": "^8.4.1",
         "@total-typescript/ts-reset": "^0.5.1",
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "@types/node": "^20.10.6",
@@ -70,8 +65,12 @@
         "commit-and-tag-version": "^12.0.0",
         "commitizen": "^4.3.0",
         "cz-conventional-changelog": "^3.3.0",
-        "eslint": "^8.56.0",
+        "eslint": "^8.55.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.29.1",
         "eslint-plugin-jsx-a11y": "^6.8.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-react": "^7.35.0",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
         "husky": "^8.0.3",
@@ -79,7 +78,7 @@
         "postcss": "^8.4.33",
         "postcss-preset-mantine": "^1.12.3",
         "postcss-simple-vars": "^7.0.1",
-        "prettier": "^3.1.1",
+        "prettier": "^3.3.3",
         "sort-package-json": "^2.6.0",
         "typescript": "^5.3.3",
         "vite": "^5.0.11"

@@ -1,4 +1,4 @@
-import { Group, Paper, SimpleGrid, Text } from '@mantine/core';
+import { Group, Paper, SimpleGrid, Text } from "@mantine/core";
 import {
   IconUserPlus,
   IconDiscount2,
@@ -6,8 +6,8 @@ import {
   IconCoin,
   IconArrowUpRight,
   IconArrowDownRight,
-} from '@tabler/icons-react';
-import classes from './styles.module.css';
+} from "@tabler/icons-react";
+import classes from "./styles.module.css";
 
 const icons = {
   user: IconUserPlus,
@@ -17,16 +17,22 @@ const icons = {
 };
 
 const data = [
-  { title: 'Revenue', icon: 'receipt', value: '13,456', diff: 34 },
-  { title: 'Profit', icon: 'coin', value: '4,145', diff: -13 },
-  { title: 'Coupons usage', icon: 'discount', value: '745', diff: 18 },
-  { title: 'New customers', icon: 'user', value: '188', diff: -30 },
+  { title: "Revenue", icon: "receipt", value: "13,456", diff: 34 },
+  { title: "Profit", icon: "coin", value: "4,145", diff: -13 },
+  {
+    title: "Coupons usage",
+    icon: "discount",
+    value: "745",
+    diff: 18,
+  },
+  { title: "New customers", icon: "user", value: "188", diff: -30 },
 ] as const;
 
 export function DashBoardView() {
   const stats = data.map((stat) => {
     const Icon = icons[stat.icon];
-    const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
+    const DiffIcon =
+      stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
     return (
       <Paper withBorder p="md" radius="md" key={stat.title}>
@@ -39,7 +45,12 @@ export function DashBoardView() {
 
         <Group align="flex-end" gap="xs" mt={25}>
           <Text className={classes.value}>{stat.value}</Text>
-          <Text c={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
+          <Text
+            c={stat.diff > 0 ? "teal" : "red"}
+            fz="sm"
+            fw={500}
+            className={classes.diff}
+          >
             <span>{stat.diff}%</span>
             <DiffIcon size="1rem" stroke={1.5} />
           </Text>
@@ -53,7 +64,9 @@ export function DashBoardView() {
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
+      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>
+        {stats}
+      </SimpleGrid>
     </div>
   );
 }

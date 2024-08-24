@@ -7,6 +7,10 @@ import RootProvider from "./features/Providers";
 import Router from "./routes";
 
 import "@/assets/styles/global.css";
+
+import "mantine-datatable/styles.layer.css";
+
+import "@/assets/styles/layout.css";
 import "@fontsource/ubuntu/latin.css";
 import "@mantine/core/styles.layer.css";
 import "@mantine/dates/styles.css";
@@ -19,5 +23,5 @@ ReactDOM.createRoot(element).render(
     <RootProvider>
       <Router />
     </RootProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

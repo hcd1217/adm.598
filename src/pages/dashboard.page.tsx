@@ -1,11 +1,10 @@
 import { DashBoardView } from "@/features/DashBoardView";
-import { Center, Container } from "@mantine/core";
+import { Container } from "@mantine/core";
 
 export default function Page() {
-    return (
-        <Container fluid>
-            <DashBoardView />
-        </Container>
-    );
+  return (
+    <Container fluid>
+      <DashBoardView />
+    </Container>
+  );
 }
-

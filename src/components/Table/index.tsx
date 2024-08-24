@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Table,
   ScrollArea,
@@ -9,9 +9,14 @@ import {
   TextInput,
   rem,
   keys,
-} from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
-import classes from './styles.module.css';
+} from "@mantine/core";
+import {
+  IconSelector,
+  IconChevronDown,
+  IconChevronUp,
+  IconSearch,
+} from "@tabler/icons-react";
+import classes from "./styles.module.css";
 
 interface RowData {
   name: string;
@@ -27,7 +32,11 @@ interface ThProps {
 }
 
 function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+  const Icon = sorted
+    ? reversed
+      ? IconChevronUp
+      : IconChevronDown
+    : IconSelector;
   return (
     <Table.Th className={classes.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
@@ -36,7 +45,10 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
             {children}
           </Text>
           <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            <Icon
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
           </Center>
         </Group>
       </UnstyledButton>
@@ -47,13 +59,19 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
+    keys(data[0]).some((key) =>
+      item[key].toLowerCase().includes(query),
+    ),
   );
 }
 
 function sortData(
   data: RowData[],
-  payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
+  payload: {
+    sortBy: keyof RowData | null;
+    reversed: boolean;
+    search: string;
+  },
 ) {
   const { sortBy } = payload;
 
@@ -69,61 +87,72 @@ function sortData(
 
       return a[sortBy].localeCompare(b[sortBy]);
     }),
-    payload.search
+    payload.search,
   );
 }
 
 const data = [
   {
-    name: 'Athena Weissnat',
-    company: 'Little - Rippin',
-    email: 'Elouise.Prohaska@yahoo.com',
+    name: "Athena Weissnat",
+    company: "Little - Rippin",
+    email: "Elouise.Prohaska@yahoo.com",
   },
   {
-    name: 'Deangelo Runolfsson',
-    company: 'Greenfelder - Krajcik',
-    email: 'Kadin_Trantow87@yahoo.com',
+    name: "Deangelo Runolfsson",
+    company: "Greenfelder - Krajcik",
+    email: "Kadin_Trantow87@yahoo.com",
   },
   {
-    name: 'Danny Carter',
-    company: 'Kohler and Sons',
-    email: 'Marina3@hotmail.com',
+    name: "Danny Carter",
+    company: "Kohler and Sons",
+    email: "Marina3@hotmail.com",
   },
   {
-    name: 'Trace Tremblay PhD',
-    company: 'Crona, Aufderhar and Senger',
-    email: 'Antonina.Pouros@yahoo.com',
+    name: "Trace Tremblay PhD",
+    company: "Crona, Aufderhar and Senger",
+    email: "Antonina.Pouros@yahoo.com",
   },
 
   {
-    name: 'Pinkie Rice',
-    company: 'Wolf, Trantow and Zulauf',
-    email: 'Fiona.Kutch@hotmail.com',
+    name: "Pinkie Rice",
+    company: "Wolf, Trantow and Zulauf",
+    email: "Fiona.Kutch@hotmail.com",
   },
   {
-    name: 'Brain Kreiger',
-    company: 'Lueilwitz Group',
-    email: 'Rico98@hotmail.com',
+    name: "Brain Kreiger",
+    company: "Lueilwitz Group",
+    email: "Rico98@hotmail.com",
   },
 ];
 
 export function TableSort() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
-  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [reverseSortDirection, setReverseSortDirection] =
+    useState(false);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
+    setSortedData(
+      sortData(data, { sortBy: field, reversed, search }),
+    );
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { value } = event.currentTarget;
     setSearch(value);
-    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+    setSortedData(
+      sortData(data, {
+        sortBy,
+        reversed: reverseSortDirection,
+        search: value,
+      }),
+    );
   };
 
   const rows = sortedData.map((row) => (
@@ -139,31 +168,41 @@ export function TableSort() {
       <TextInput
         placeholder="Search by any field"
         mb="md"
-        leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+        leftSection={
+          <IconSearch
+            style={{ width: rem(16), height: rem(16) }}
+            stroke={1.5}
+          />
+        }
         value={search}
         onChange={handleSearchChange}
       />
-      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+      <Table
+        horizontalSpacing="md"
+        verticalSpacing="xs"
+        miw={700}
+        layout="fixed"
+      >
         <Table.Tbody>
           <Table.Tr>
             <Th
-              sorted={sortBy === 'name'}
+              sorted={sortBy === "name"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('name')}
+              onSort={() => setSorting("name")}
             >
               Name
             </Th>
             <Th
-              sorted={sortBy === 'email'}
+              sorted={sortBy === "email"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('email')}
+              onSort={() => setSorting("email")}
             >
               Email
             </Th>
             <Th
-              sorted={sortBy === 'company'}
+              sorted={sortBy === "company"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('company')}
+              onSort={() => setSorting("company")}
             >
               Company
             </Th>

@@ -1,3 +1,1 @@
-export enum Modals {
-
-}
+export enum Modals {}
