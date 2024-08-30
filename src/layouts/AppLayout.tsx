@@ -1,7 +1,6 @@
 import Page from "@/components/Page";
-import { sidebar } from "@/constants/ui";
 import Sidebar from "@/features/Sidebar";
-import { Group, Stack } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 
 export default function AppLayout({
@@ -10,18 +9,23 @@ export default function AppLayout({
   children?: React.ReactNode;
 }) {
   return (
-    <Group align="flex-start" justify="flex-start" mih={"100vh"}>
+    <Flex
+      mih={"100vh"}
+      styles={{
+        root: {
+          overflow: "hidden"
+        }
+      }}
+    >
       <Sidebar />
-      <Stack
-        gap={0}
-        ml={sidebar.width}
-        h={"100vh"}
+      <Box
+        style={{ overflowX: "hidden", overflowY: "auto" }}
         w={"100%"}
-        pos={"relative"}
+        py={"md"}
+        h={"100%"}
       >
-        {/* <Header /> */}
         <Page>{children || <Outlet />}</Page>
-      </Stack>
-    </Group>
+      </Box>
+    </Flex>
   );
 }

@@ -28,3 +28,27 @@ export default class Color {
     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
   }
 }
+
+
+export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> = {
+  COMMISSION_FEE: "#FF5733",
+  DEPOSIT: "teal",
+  DEPOSIT_COPY_FUND: "#3357FF",
+  FIAT_DEPOSIT: "#FF33A1",
+  FUNDING_FEE: "#33FFF5",
+  LIQUIDATION_CLEARANCE: "#FFEB33",
+  REALIZED_PNL: "#8E44AD",
+  REFERRAL_KICKBACK: "#2980B9",
+  SWAP: "#27AE60",
+  TRANSFER_IN: "#F39C12",
+  TRANSFER_OUT: "#E74C3C",
+  WITHDRAW: "#2C3E50",
+  WITHDRAW_COPY_FUND: "#D35400",
+};
+
+export const TRANSACTION_STATUS_COLORS: Record<TRANSACTION_STATUS, string> = {
+  FAILED: "##ff0000",
+  DONE: "#27AE60",
+  PENDING: "#F39C12",
+  PROCESSING: "#3357FF"
+};

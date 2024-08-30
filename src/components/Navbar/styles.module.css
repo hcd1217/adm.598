@@ -3,10 +3,11 @@
   font-family: Ubuntu, sans-serif;
   height: 100vh;
   overflow: hidden;
-  position: fixed;
+  /* position: fixed; */
   min-width: 300px;
   max-width: 300px;
   min-height: 100vh;
   max-height: 100vh;
   z-index: 100;
+  border-right: solid 1px #dee2e6;
 }

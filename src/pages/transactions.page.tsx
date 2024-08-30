@@ -1,5 +1,5 @@
-import { UserListFilter } from "@/features/Users";
-import { Anchor, Breadcrumbs, Container, Space } from "@mantine/core";
+import { TransitionsListFilter } from "@/features/Transitions";
+import { Anchor, Box, Breadcrumbs, Container, Space } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
 export default function Page() {
@@ -12,11 +12,13 @@ export default function Page() {
           Dashboard
         </Anchor>
         <Anchor fz={14} fw={400} c={"primary"}>
-          Users
+          Transactions
         </Anchor>
       </Breadcrumbs>
       <Space my={"md"} />
-      <UserListFilter />
+      <Box style={{ overflow: "hidden" }}>
+        <TransitionsListFilter />
+      </Box>
     </Container>
   );
 }

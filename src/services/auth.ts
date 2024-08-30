@@ -3,9 +3,7 @@ import {
   updateUserPayloadSchema,
   UserUpdateType,
 } from "@/types/common";
-import { UserPayload } from "@/types/user";
 import { api } from "@/utils/api";
-import { faker } from "@faker-js/faker";
 import { z } from "zod";
 
 type LoginData = ApiResponse<{
@@ -49,25 +47,13 @@ export function updateUserApi(
   });
 }
 
-export async function getUserList() {
-  const users: UserPayload[] = [...Array(100)].map(() => ({
-    id: faker.string.uuid(),
-    depositCode: faker.finance.bitcoinAddress(),
-    email: faker.internet.exampleEmail(),
-    mobile: faker.phone.number(),
-  }));
+export async function getUserListApi() {
 
-  const res: ApiResponse<UserPayload[]> = {
-    result: users,
-    data: users,
-    statusCode: 200,
-    success: true,
-  };
-  return res;
-  // const response = await api.get<ApiResponse<UserPayload>>("/api/users");
-  // console.log("Indentify", response.data.result);
-  // if (response.data.result) {
-  //   return response.data.result;
-  // }
-  // return Promise.reject(null);
+  const response = await api.post<ApiResponse<UserPayload[]>>("/internal-api/get-all-users", {
+    "clearCache": false
+  });
+  if (response.data?.result) {
+    return response.data;
+  }
+  return Promise.reject(null);
 }

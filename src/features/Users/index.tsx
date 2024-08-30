@@ -1,40 +1,28 @@
-import { getUserList } from "@/services/auth";
+import { getUserListApi } from "@/services/auth";
 import { PAGE_SIZE } from "@/types/common";
-import { UserPayload } from "@/types/user";
 import {
   ActionIcon,
   Box,
   Button,
   Card,
+  Checkbox,
   Flex,
   Space,
   TextInput,
-  Title,
+  Title
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconRefresh, IconSearch, IconX } from "@tabler/icons-react";
-import { sortBy } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { useEffect, useMemo, useState } from "react";
+import { matchSorter } from "match-sorter";
+import { useCallback, useMemo, useState } from "react";
+import useSWR, { mutate } from "swr";
 
-const doSearch = (debouncedQuery: string, fieldName: string) => {
-  if (
-    debouncedQuery !== "" &&
-    !`${fieldName}`
-      .toLowerCase()
-      .includes(debouncedQuery.trim().toLowerCase())
-  ) {
-    return false;
-  }
-  return true;
-};
 
 export function UserListFilter() {
-  const [records, setRecords] = useState<UserPayload[]>([]);
-  const [fetching, setFetching] = useState(false);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
-  const [debouncedQuery] = useDebouncedValue(query, 200);
+  const [debouncedQuery] = useDebouncedValue(query, 800);
   const [sortStatus, setSortStatus] = useState<
     DataTableSortStatus<UserPayload>
   >({
@@ -42,23 +30,14 @@ export function UserListFilter() {
     direction: "asc",
   });
 
-  useEffect(() => {
-    const data = sortBy(
-      records,
-      sortStatus.columnAccessor,
-    ) as UserPayload[];
-    setRecords(
-      sortStatus.direction === "desc" ? data.reverse() : data,
-    );
-  }, [sortStatus, records]);
+  const { data, isLoading } = useSWR("/internal-api/get-all-users", getUserListApi, {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true
+  });
 
-  const loadRecords = () => {
-    getUserList()
-      .then((res) => {
-        setRecords(res.result);
-      })
-      .finally(() => setFetching(false));
-  };
+  const loadRecords = useCallback(() => {
+    mutate("/internal-api/get-transactions");
+  }, []);
 
   const refresh = () => {
     setPage(1);
@@ -66,19 +45,16 @@ export function UserListFilter() {
     loadRecords();
   };
 
-  useEffect(() => {
-    loadRecords();
-  }, []);
-
   const items = useMemo(() => {
-    const _items = [...records].filter(({ email }) =>
-      doSearch(debouncedQuery, email as string),
-    );
+    let _items = [...data?.result ?? []];
+    if (debouncedQuery) {
+      _items = matchSorter([...data?.result ?? []], debouncedQuery, { keys: ["depositCode", "accountId", "userId", "type", "side"] });
+    }
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE;
     const t = _items.slice(from, to);
     return t;
-  }, [debouncedQuery, records, page]);
+  }, [debouncedQuery, data?.result, page]);
 
   return (
     <Box>
@@ -88,26 +64,35 @@ export function UserListFilter() {
           <Button
             onClick={refresh}
             title="Refresh"
-            disabled={fetching}
-            loading={fetching}
+            disabled={isLoading}
+            loading={isLoading}
           >
             <IconRefresh />
           </Button>
         </Flex>
       </Card>
+
+      <Flex gap={10} wrap={"wrap"}>
+        <TextInput
+          value={query}
+          label="UID"
+          onChange={(event) => setQuery(event.currentTarget.value)}
+        />
+        <TextInput label="Email" />
+        <TextInput label="Mobile" />
+      </Flex>
       <Space my={"md"} />
       <DataTable
-        height={500}
+        height={"75vh"}
         withTableBorder
         withColumnBorders
         records={items}
-        fetching={fetching}
+        fetching={isLoading}
         columns={[
           {
             accessor: "email",
             render: ({ email }) => email,
             sortable: true,
-            resizable: true,
             filter: (
               <TextInput
                 label="Email"
@@ -134,18 +119,27 @@ export function UserListFilter() {
             accessor: "depositCode",
             sortable: true,
             render: ({ depositCode }) => depositCode,
-            resizable: true,
           },
           {
             accessor: "mobile",
             render: ({ mobile }) => mobile,
             sortable: true,
-            resizable: true,
+          },
+          {
+            accessor: "fullName",
+            render: ({ fullName }) => (
+              <>{fullName}</>
+            ),
+          },
+          {
+            accessor: "isDemo",
+            title: "Demo",
+            render: ({ isDemo }) => isDemo && <Checkbox />,
           },
         ]}
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
-        totalRecords={records.length}
+        totalRecords={data?.result.length}
         recordsPerPage={PAGE_SIZE}
         page={page}
         onPageChange={(p) => setPage(p)}

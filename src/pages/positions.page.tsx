@@ -1,4 +1,4 @@
-import { UserListFilter } from "@/features/Users";
+import { PositionsListFilter } from "@/features/Positions";
 import { Anchor, Breadcrumbs, Container, Space } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
@@ -12,11 +12,11 @@ export default function Page() {
           Dashboard
         </Anchor>
         <Anchor fz={14} fw={400} c={"primary"}>
-          Users
+          Positions
         </Anchor>
       </Breadcrumbs>
       <Space my={"md"} />
-      <UserListFilter />
+      <PositionsListFilter />
     </Container>
   );
 }
