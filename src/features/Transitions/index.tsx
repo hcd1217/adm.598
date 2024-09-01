@@ -29,7 +29,7 @@ export function TransitionsListFilter() {
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(query, 200);
   const [sortStatus, setSortStatus] = useState<
-    DataTableSortStatus<TransactionPayload>
+  DataTableSortStatus<TransactionPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",

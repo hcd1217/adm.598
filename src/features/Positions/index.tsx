@@ -41,7 +41,7 @@ export function PositionsListFilter() {
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(query, 800);
   const [sortStatus, setSortStatus] = useState<
-    DataTableSortStatus<PositionPayload>
+  DataTableSortStatus<PositionPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",

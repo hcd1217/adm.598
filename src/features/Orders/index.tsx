@@ -42,7 +42,7 @@ export function OrderListFilter() {
   const [debounced] = useDebouncedValue(value, 800);
   const [debouncedQuery] = useDebouncedValue(query, 200);
   const [sortStatus, setSortStatus] = useState<
-    DataTableSortStatus<OrderPayload>
+  DataTableSortStatus<OrderPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",

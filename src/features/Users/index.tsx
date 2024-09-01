@@ -9,7 +9,7 @@ import {
   Flex,
   Space,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconRefresh, IconSearch, IconX } from "@tabler/icons-react";
@@ -18,22 +18,25 @@ import { matchSorter } from "match-sorter";
 import { useCallback, useMemo, useState } from "react";
 import useSWR, { mutate } from "swr";
 
-
 export function UserListFilter() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(query, 800);
-  const [sortStatus, setSortStatus] = useState<
-    DataTableSortStatus<UserPayload>
-  >({
+
+  // prettier-ignore
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<UserPayload>>({
     columnAccessor: "depositCode",
     direction: "asc",
   });
 
-  const { data, isLoading } = useSWR("/internal-api/get-all-users", getUserListApi, {
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true
-  });
+  const { data, isLoading } = useSWR(
+    "/internal-api/get-all-users",
+    getUserListApi,
+    {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+    },
+  );
 
   const loadRecords = useCallback(() => {
     mutate("/internal-api/get-transactions");
@@ -46,9 +49,21 @@ export function UserListFilter() {
   };
 
   const items = useMemo(() => {
-    let _items = [...data?.result ?? []];
+    let _items = [...(data?.result ?? [])];
     if (debouncedQuery) {
-      _items = matchSorter([...data?.result ?? []], debouncedQuery, { keys: ["depositCode", "accountId", "userId", "type", "side"] });
+      _items = matchSorter(
+        [...(data?.result ?? [])],
+        debouncedQuery,
+        {
+          keys: [
+            "depositCode",
+            "accountId",
+            "userId",
+            "type",
+            "side",
+          ],
+        },
+      );
     }
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE;
@@ -127,9 +142,7 @@ export function UserListFilter() {
           },
           {
             accessor: "fullName",
-            render: ({ fullName }) => (
-              <>{fullName}</>
-            ),
+            render: ({ fullName }) => <>{fullName}</>,
           },
           {
             accessor: "isDemo",
