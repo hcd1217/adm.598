@@ -1,7 +1,7 @@
 import { OrderSide } from "@/common/enums";
 import NumberFormat from "@/components/NumberFormat";
+import { useRecords } from "@/hooks/useRecords";
 import { getPositionsApi } from "@/services/positions";
-import { PAGE_SIZE } from "@/types/common";
 import { TRANSACTION_STATUS_COLORS } from "@/utils/color";
 import {
   Box,
@@ -15,64 +15,29 @@ import {
   TextInput,
   Title
 } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
 import { IconRefresh } from "@tabler/icons-react";
 import { keys } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { matchSorter } from "match-sorter";
-import { useCallback, useMemo, useState } from "react";
-import useSWR, { mutate } from "swr";
-
-
-export const doSearch = (debouncedQuery: string, fieldName: string) => {
-  if (
-    debouncedQuery !== "" &&
-    !`${fieldName}`
-      .toLowerCase()
-      .includes(debouncedQuery.trim().toLowerCase())
-  ) {
-    return false;
-  }
-  return true;
-};
+import { useState } from "react";
 
 export function PositionsListFilter() {
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery] = useDebouncedValue(query, 800);
+
   const [sortStatus, setSortStatus] = useState<
   DataTableSortStatus<PositionPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",
   });
-  const { data, error, isLoading } = useSWR("/internal-api/get-positions", getPositionsApi, {
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true
+
+  const {
+    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE
+  } = useRecords<{
+    accountId: string;
+    side: string;
+  }, PositionPayload>("/internal-api/get-positions", getPositionsApi, {
+    accountId: "",
+    side: "",
   });
-
-  const loadRecords = useCallback(() => {
-    mutate("/internal-api/get-positions");
-  }, []);
-
-  const refresh = () => {
-    setPage(1);
-    setQuery("");
-    loadRecords();
-  };
-
-
-  const items = useMemo(() => {
-    let _items = [...data?.result ?? []];
-    if (debouncedQuery) {
-      _items = matchSorter([...data?.result ?? []], debouncedQuery, { keys: ["accountId"] });
-    }
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE;
-    const t = _items.slice(from, to);
-    return t;
-  }, [debouncedQuery, data?.result, page]);
-
   return (
     <Box style={{ overflow: "hidden" }}>
       <Card bd={1} p={0}>
@@ -88,16 +53,24 @@ export function PositionsListFilter() {
           </Button>
         </Flex>
       </Card>
-      <Flex gap={10}>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Flex gap={10}>
-          <TextInput
-            value={query}
-            label="UID"
-            onChange={(event) => setQuery(event.currentTarget.value)}
-          />
+          <Flex gap={10}>
+            <TextInput
+              label="UID"
+              key={form.key("accountId")}
+              {...form.getInputProps("accountId")}
+            />
+          </Flex>
+          <Select
+            key={form.key("side")}
+            {...form.getInputProps("side")}
+            label="Order Side"
+            searchable
+            data={keys(OrderSide)}
+          ></Select>
         </Flex>
-        <Select label="Order Side" searchable data={keys(OrderSide)}></Select>
-      </Flex>
+      </form>
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <DataTable

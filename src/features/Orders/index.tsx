@@ -1,6 +1,6 @@
-import { OrderSide, OrderType } from "@/common/enums";
+import { OrderSide, OrderStatus, OrderType } from "@/common/enums";
+import { useRecords } from "@/hooks/useRecords";
 import { getOrdersApi } from "@/services/orders";
-import { PAGE_SIZE } from "@/types/common";
 import { TRANSACTION_STATUS_COLORS } from "@/utils/color";
 import {
   Box,
@@ -14,13 +14,10 @@ import {
   TextInput,
   Title
 } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
 import { IconRefresh } from "@tabler/icons-react";
 import { keys } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { matchSorter } from "match-sorter";
-import { useCallback, useMemo, useState } from "react";
-import useSWR, { mutate } from "swr";
+import { useState } from "react";
 
 
 export const doSearch = (debouncedQuery: string, fieldName: string) => {
@@ -36,43 +33,27 @@ export const doSearch = (debouncedQuery: string, fieldName: string) => {
 };
 
 export function OrderListFilter() {
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [value, setValue] = useState("");
-  const [debounced] = useDebouncedValue(value, 800);
-  const [debouncedQuery] = useDebouncedValue(query, 200);
+
   const [sortStatus, setSortStatus] = useState<
   DataTableSortStatus<OrderPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",
   });
-  const { data, error, isLoading } = useSWR("/internal-api/get-orders", getOrdersApi, {
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true
+  const {
+    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE
+  } = useRecords<{
+    accountId: string;
+    type: string;
+    status: string;
+    side: string;
+  }, OrderPayload>("/internal-api/get-orders", getOrdersApi, {
+    accountId: "",
+    type: "",
+    status: "",
+    side: "",
   });
 
-  const loadRecords = useCallback(() => {
-    mutate("/internal-api/get-orders");
-  }, []);
-
-  const refresh = () => {
-    setPage(1);
-    setQuery("");
-    loadRecords();
-  };
-
-
-  const items = useMemo(() => {
-    let _items = [...data?.result ?? []];
-    if (debounced) {
-      _items = matchSorter([...data?.result ?? []], debounced, { keys: ["accountId", "userId", "type", "side"] });
-    }
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE;
-    const t = _items.slice(from, to);
-    return t;
-  }, [debouncedQuery, data?.result, page, debounced]);
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -89,15 +70,36 @@ export function OrderListFilter() {
           </Button>
         </Flex>
       </Card>
-      <Flex gap={10}>
-        <TextInput
-          value={value}
-          label="UID"
-          onChange={(event) => setValue(event.currentTarget.value)}
-        />
-        <Select label="Order Type" searchable data={keys(OrderType)}></Select>
-        <Select label="Order Side" searchable data={keys(OrderSide)}></Select>
-      </Flex>
+      <form onSubmit={form.onSubmit(() => { })}>
+        <Flex gap={10}>
+          <TextInput
+            label="UID"
+            key={form.key("accountId")}
+            {...form.getInputProps("accountId")}
+          />
+          <Select
+            label="Order Type"
+            key={form.key("type")}
+            {...form.getInputProps("type")}
+            searchable
+            data={keys(OrderType)}
+          ></Select>
+          <Select
+            label="Order Side"
+            key={form.key("side")}
+            {...form.getInputProps("side")}
+            searchable
+            data={keys(OrderSide)}
+          ></Select>
+          <Select
+            label="Order Status"
+            key={form.key("status")}
+            {...form.getInputProps("status")}
+            searchable
+            data={keys(OrderStatus)}
+          ></Select>
+        </Flex>
+      </form>
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <DataTable

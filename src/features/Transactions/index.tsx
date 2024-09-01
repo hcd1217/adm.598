@@ -1,7 +1,7 @@
 import { TransactionStatus, TransactionType } from "@/common/enums";
 import NumberFormat from "@/components/NumberFormat";
+import { useRecords } from "@/hooks/useRecords";
 import { getTransactionsApi } from "@/services/transactions";
-import { PAGE_SIZE } from "@/types/common";
 import { TRANSACTION_STATUS_COLORS, TRANSACTION_TYPE_COLORS } from "@/utils/color";
 import {
   Box,
@@ -15,51 +15,31 @@ import {
   TextInput,
   Title
 } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
 import { IconRefresh } from "@tabler/icons-react";
 import { keys } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { matchSorter } from "match-sorter";
-import { useCallback, useMemo, useState } from "react";
-import useSWR, { mutate } from "swr";
+import { useState } from "react";
 
-
-export function TransitionsListFilter() {
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery] = useDebouncedValue(query, 200);
+export function TransactionsListFilter() {
+  const {
+    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE
+  } = useRecords<{
+    userId: string;
+    type: string;
+    status: string;
+    amount: string;
+  }, TransactionPayload>("/internal-api/get-transactions", getTransactionsApi, {
+    userId: "",
+    type: "",
+    status: "",
+    amount: "",
+  });
   const [sortStatus, setSortStatus] = useState<
   DataTableSortStatus<TransactionPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",
   });
-  const { data, isLoading } = useSWR("/internal-api/get-transactions", getTransactionsApi, {
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true
-  });
-
-  const loadRecords = useCallback(() => {
-    mutate("/internal-api/get-transactions");
-  }, []);
-
-  const refresh = () => {
-    setPage(1);
-    setQuery("");
-    loadRecords();
-  };
-
-
-  const items = useMemo(() => {
-    let _items = [...data?.result ?? []];
-    if (debouncedQuery) {
-      _items = matchSorter([...data?.result ?? []], debouncedQuery, { keys: ["accountId", "userId", "type", "side"] });
-    }
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE;
-    const t = _items.slice(from, to);
-    return t;
-  }, [debouncedQuery, data?.result, page]);
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -67,7 +47,7 @@ export function TransitionsListFilter() {
         <Flex justify={"space-between"}>
           <Title order={3}>Transactions list</Title>
           <Button
-            onClick={refresh}
+            onClick={() => refresh()}
             title="Refresh"
             disabled={isLoading}
             loading={isLoading}
@@ -76,18 +56,37 @@ export function TransitionsListFilter() {
           </Button>
         </Flex>
       </Card>
-      <Flex gap={10}>
-        <TextInput
-          value={query}
-          label="UID"
-          onChange={(event) => setQuery(event.currentTarget.value)}
-        />
-        <Select label="Type" searchable data={keys(TransactionType)}></Select>
-        <Select label="Status" searchable data={keys(TransactionStatus)}></Select>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Flex gap={10}>
-          <NumberInput label="Amount" hideControls />
+          <TextInput
+            label="UID"
+            key={form.key("userId")}
+            {...form.getInputProps("userId")}
+          />
+          <Select
+            key={form.key("type")}
+            {...form.getInputProps("type")}
+            label="Type"
+            searchable
+            data={keys(TransactionType)}
+          ></Select>
+          <Select
+            label="Status"
+            searchable
+            data={keys(TransactionStatus)}
+            key={form.key("status")}
+            {...form.getInputProps("status")}
+          />
+          <Flex gap={10}>
+            <NumberInput
+              key={form.key("amount")}
+              {...form.getInputProps("amount")}
+              label="Amount"
+              hideControls
+            />
+          </Flex>
         </Flex>
-      </Flex>
+      </form>
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <DataTable

@@ -1,75 +1,29 @@
+import { useRecords } from "@/hooks/useRecords";
 import { getUserListApi } from "@/services/auth";
-import { PAGE_SIZE } from "@/types/common";
 import {
-  ActionIcon,
   Box,
   Button,
   Card,
   Checkbox,
   Flex,
   Space,
-  TextInput,
-  Title,
+  TextInput, Title
 } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
-import { IconRefresh, IconSearch, IconX } from "@tabler/icons-react";
-import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { matchSorter } from "match-sorter";
-import { useCallback, useMemo, useState } from "react";
-import useSWR, { mutate } from "swr";
+import { IconRefresh } from "@tabler/icons-react";
+import { DataTable } from "mantine-datatable";
 
 export function UserListFilter() {
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery] = useDebouncedValue(query, 800);
-
-  // prettier-ignore
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<UserPayload>>({
-    columnAccessor: "depositCode",
-    direction: "asc",
+  const {
+    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE, sortStatus, setSortStatus
+  } = useRecords<{
+    depositCode: string;
+    email: string;
+    mobile: string;
+  }, UserPayload>("/internal-api/get-all-users", getUserListApi, {
+    depositCode: "",
+    email: "",
+    mobile: "",
   });
-
-  const { data, isLoading } = useSWR(
-    "/internal-api/get-all-users",
-    getUserListApi,
-    {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-    },
-  );
-
-  const loadRecords = useCallback(() => {
-    mutate("/internal-api/get-transactions");
-  }, []);
-
-  const refresh = () => {
-    setPage(1);
-    setQuery("");
-    loadRecords();
-  };
-
-  const items = useMemo(() => {
-    let _items = [...(data?.result ?? [])];
-    if (debouncedQuery) {
-      _items = matchSorter(
-        [...(data?.result ?? [])],
-        debouncedQuery,
-        {
-          keys: [
-            "depositCode",
-            "accountId",
-            "userId",
-            "type",
-            "side",
-          ],
-        },
-      );
-    }
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE;
-    const t = _items.slice(from, to);
-    return t;
-  }, [debouncedQuery, data?.result, page]);
 
   return (
     <Box>
@@ -86,16 +40,25 @@ export function UserListFilter() {
           </Button>
         </Flex>
       </Card>
-
-      <Flex gap={10} wrap={"wrap"}>
-        <TextInput
-          value={query}
-          label="UID"
-          onChange={(event) => setQuery(event.currentTarget.value)}
-        />
-        <TextInput label="Email" />
-        <TextInput label="Mobile" />
-      </Flex>
+      <form onSubmit={form.onSubmit(() => { })}>
+        <Flex gap={10} wrap={"wrap"}>
+          <TextInput
+            label="UID"
+            key={form.key("depositCode")}
+            {...form.getInputProps("depositCode")}
+          />
+          <TextInput
+            label="Email"
+            key={form.key("email")}
+            {...form.getInputProps("email")}
+          />
+          <TextInput
+            label="Mobile"
+            key={form.key("mobile")}
+            {...form.getInputProps("mobile")}
+          />
+        </Flex>
+      </form>
       <Space my={"md"} />
       <DataTable
         height={"75vh"}
@@ -108,27 +71,6 @@ export function UserListFilter() {
             accessor: "email",
             render: ({ email }) => email,
             sortable: true,
-            filter: (
-              <TextInput
-                label="Email"
-                description="Show email whose emails include the specified text"
-                placeholder="Search email..."
-                leftSection={<IconSearch size={16} />}
-                rightSection={
-                  <ActionIcon
-                    size="sm"
-                    variant="transparent"
-                    c="dimmed"
-                    onClick={() => setQuery("")}
-                  >
-                    <IconX size={14} />
-                  </ActionIcon>
-                }
-                value={query}
-                onChange={(e) => setQuery(e.currentTarget.value)}
-              />
-            ),
-            filtering: query !== "",
           },
           {
             accessor: "depositCode",
