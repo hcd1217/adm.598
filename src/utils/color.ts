@@ -29,8 +29,10 @@ export default class Color {
   }
 }
 
-
-export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> = {
+export const TRANSACTION_TYPE_COLORS: Record<
+  TRANSACTION_TYPE,
+  string
+> = {
   COMMISSION_FEE: "#FF5733",
   DEPOSIT: "teal",
   DEPOSIT_COPY_FUND: "#3357FF",
@@ -46,9 +48,12 @@ export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> = {
   WITHDRAW_COPY_FUND: "#D35400",
 };
 
-export const TRANSACTION_STATUS_COLORS: Record<TRANSACTION_STATUS, string> = {
+export const TRANSACTION_STATUS_COLORS: Record<
+  TRANSACTION_STATUS,
+  string
+> = {
   FAILED: "##ff0000",
   DONE: "#27AE60",
   PENDING: "#F39C12",
-  PROCESSING: "#3357FF"
+  PROCESSING: "#3357FF",
 };

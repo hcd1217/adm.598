@@ -1,21 +1,22 @@
 import { api } from "@/utils/api";
 
-export async function getTransactionsApi() {
-  // const results: PositionPayload[] = [...Array(100)].map(() => ({
-  //     id: faker.string.uuid(),
-  //     depositCode: faker.finance.bitcoinAddress(),
-  //     email: faker.internet.exampleEmail(),
-  //     mobile: faker.phone.number(),
-  // }));
-
-  // const res: ApiResponse<PositionPayload[]> = {
-  //     result: results,
-  //     data: results,
-  //     statusCode: 200,
-  //     success: true,
-  // };
-  // return res
-  const response = await api.post<ApiResponse<TransactionPayload[]>>("/internal-api/get-transactions");
+export async function getTransactionsApi(
+  params: Record<string, unknown> = {},
+) {
+  const formData = { ...params };
+  if ((formData.types as unknown[]).length === 0) {
+    delete formData["types"];
+  }
+  const userId =
+    formData.userId && (params.userId as string).toString().trim();
+  if (!userId) {
+    delete formData["userId"];
+  }
+  window.console.log(params, formData);
+  const response = await api.post<ApiResponse<TransactionPayload[]>>(
+    "/internal-api/get-transactions",
+    { ...formData },
+  );
   if (response.data?.result) {
     return response.data;
   }

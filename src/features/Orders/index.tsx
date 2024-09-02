@@ -8,19 +8,20 @@ import {
   Card,
   Checkbox,
   Flex,
-  Select,
+  MultiSelect,
   Space,
   Text,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { keys } from "lodash";
-import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { useState } from "react";
+import { DataTable } from "mantine-datatable";
 
-
-export const doSearch = (debouncedQuery: string, fieldName: string) => {
+export const doSearch = (
+  debouncedQuery: string,
+  fieldName: string,
+) => {
   if (
     debouncedQuery !== "" &&
     !`${fieldName}`
@@ -33,27 +34,27 @@ export const doSearch = (debouncedQuery: string, fieldName: string) => {
 };
 
 export function OrderListFilter() {
-
-  const [sortStatus, setSortStatus] = useState<
-  DataTableSortStatus<OrderPayload>
-  >({
-    columnAccessor: "depositCode",
-    direction: "asc",
-  });
   const {
-    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE
-  } = useRecords<{
-    accountId: string;
-    type: string;
-    status: string;
-    side: string;
-  }, OrderPayload>("/internal-api/get-orders", getOrdersApi, {
-    accountId: "",
-    type: "",
-    status: "",
-    side: "",
+    sortStatus,
+    setSortStatus,
+    form,
+    data,
+    refresh,
+    items,
+    isLoading,
+    page,
+    setPage,
+    PAGE_SIZE,
+  } = useRecords<
+    {
+      userId: string;
+      status: string[];
+    },
+    OrderPayload
+  >("/internal-api/get-orders", getOrdersApi, {
+    userId: "",
+    status: [],
   });
-
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -70,34 +71,21 @@ export function OrderListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => { })}>
+      <form onSubmit={form.onSubmit(() => {})}>
         <Flex gap={10}>
           <TextInput
             label="UID"
-            key={form.key("accountId")}
-            {...form.getInputProps("accountId")}
+            key={form.key("userId")}
+            {...form.getInputProps("userId")}
           />
-          <Select
-            label="Order Type"
-            key={form.key("type")}
-            {...form.getInputProps("type")}
-            searchable
-            data={keys(OrderType)}
-          ></Select>
-          <Select
-            label="Order Side"
-            key={form.key("side")}
-            {...form.getInputProps("side")}
-            searchable
-            data={keys(OrderSide)}
-          ></Select>
-          <Select
+          <MultiSelect
             label="Order Status"
             key={form.key("status")}
             {...form.getInputProps("status")}
             searchable
             data={keys(OrderStatus)}
-          ></Select>
+            clearable
+          ></MultiSelect>
         </Flex>
       </form>
       <Space my={"md"} />
@@ -114,111 +102,137 @@ export function OrderListFilter() {
               accessor: "type",
               render: ({ type }) => (
                 <>
-                  <Button fullWidth bg={type === OrderType.LIMIT ? "red" : "orange"} size="xs">{type}</Button>
+                  <Button
+                    fullWidth
+                    bg={type === OrderType.LIMIT ? "red" : "orange"}
+                    size="xs"
+                  >
+                    {type}
+                  </Button>
                 </>
               ),
               sortable: true,
-              resizable: true
+              resizable: true,
             },
             {
-              accessor: "accountId",
+              accessor: "userId",
               sortable: true,
-              render: ({ accountId }) => accountId,
-              resizable: true
+              render: ({ userId }) => userId,
+              resizable: true,
             },
             {
               accessor: "positionId",
               sortable: true,
               render: ({ positionId }) => positionId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "orderId",
               sortable: true,
               render: ({ orderId }) => orderId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "symbolId",
               sortable: true,
               render: ({ symbolId }) => symbolId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "clientOrderId",
               sortable: true,
               render: ({ clientOrderId }) => clientOrderId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "forwardedOrderId",
               sortable: true,
               render: ({ forwardedOrderId }) => forwardedOrderId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "binanceOrderId",
               sortable: true,
               render: ({ binanceOrderId }) => binanceOrderId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "side",
               sortable: true,
               render: ({ side }) => (
                 <>
-                  <Button fullWidth bg={side === OrderSide.SELL ? "red" : TRANSACTION_STATUS_COLORS.DONE} size="xs">{side}</Button>
+                  <Button
+                    fullWidth
+                    bg={
+                      side === OrderSide.SELL
+                        ? "red"
+                        : TRANSACTION_STATUS_COLORS.DONE
+                    }
+                    size="xs"
+                  >
+                    {side}
+                  </Button>
                 </>
               ),
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "postOnly",
               sortable: true,
-              render: ({ postOnly }) => <>
-                <Checkbox readOnly checked={postOnly} />
-              </>,
-              resizable: true
+              render: ({ postOnly }) => (
+                <>
+                  <Checkbox readOnly checked={postOnly} />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "reduceOnly",
               sortable: true,
-              render: ({ reduceOnly }) => <>
-                <Checkbox readOnly checked={reduceOnly} />
-              </>,
-              resizable: true
+              render: ({ reduceOnly }) => (
+                <>
+                  <Checkbox readOnly checked={reduceOnly} />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "price",
               sortable: true,
               render: ({ price }) => price,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "avgPrice",
               sortable: true,
               render: ({ avgPrice }) => avgPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "leverage",
               sortable: true,
               render: ({ leverage }) => leverage,
-              resizable: true
+              resizable: true,
             },
 
             {
               accessor: "createdAt",
               sortable: true,
-              render: ({ createdAt }) => <Text
-                styles={{
-                  root: {
-                    whiteSpace: "nowrap"
-                  }
-                }}
-                fz={14}
-              >{new Date(createdAt).toLocaleString()}</Text>,
-              resizable: true
+              render: ({ createdAt }) => (
+                <>
+                  <Text
+                    styles={{
+                      root: {
+                        whiteSpace: "nowrap",
+                      },
+                    }}
+                    fz={14}
+                  >
+                    {new Date(createdAt).toLocaleString()}
+                  </Text>
+                </>
+              ),
+              resizable: true,
             },
 
             {
@@ -226,7 +240,13 @@ export function OrderListFilter() {
               resizable: true,
               render: ({ status }) => (
                 <>
-                  <Button fullWidth bg={TRANSACTION_STATUS_COLORS[status]} size="xs">{status}</Button>
+                  <Button
+                    fullWidth
+                    bg={TRANSACTION_STATUS_COLORS[status]}
+                    size="xs"
+                  >
+                    {status}
+                  </Button>
                 </>
               ),
               sortable: true,
@@ -235,111 +255,119 @@ export function OrderListFilter() {
               accessor: "volume",
               sortable: true,
               render: ({ volume }) => volume,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "reduceVolume",
               sortable: true,
               render: ({ reduceVolume }) => reduceVolume,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "realizedPnl",
               sortable: true,
               render: ({ realizedPnl }) => realizedPnl,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "filledAt",
               sortable: true,
               render: ({ filledAt }) => filledAt,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "filled",
               sortable: true,
               render: ({ filled }) => filled,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "stopLoss",
               sortable: true,
               render: ({ stopLoss }) => stopLoss,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "takeProfit",
               sortable: true,
               render: ({ takeProfit }) => takeProfit,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "takeProfitTriggerBy",
               sortable: true,
-              render: ({ takeProfitTriggerBy }) => takeProfitTriggerBy,
-              resizable: true
+              render: ({ takeProfitTriggerBy }) =>
+                takeProfitTriggerBy,
+              resizable: true,
             },
             {
               accessor: "triggerPrice",
               sortable: true,
               render: ({ triggerPrice }) => triggerPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "triggerBy",
               sortable: true,
               render: ({ triggerBy }) => triggerBy,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "triggerDirection",
               sortable: true,
               render: ({ triggerDirection }) => triggerDirection,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "timeInForce",
               sortable: true,
               render: ({ timeInForce }) => timeInForce,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "stopLossTriggerBy",
               sortable: true,
               render: ({ stopLossTriggerBy }) => stopLossTriggerBy,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "masterOrderId",
               sortable: true,
               render: ({ masterOrderId }) => masterOrderId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "masterAccountId",
               sortable: true,
               render: ({ masterAccountId }) => masterAccountId,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "isCopy",
               sortable: true,
-              render: ({ isCopy }) => <><Checkbox checked={isCopy} readOnly /></>,
-              resizable: true
+              render: ({ isCopy }) => (
+                <>
+                  <Checkbox checked={isCopy} readOnly />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "isMasterOrder",
               sortable: true,
-              render: ({ isMasterOrder }) => <><Checkbox checked={isMasterOrder} readOnly /></>,
-              resizable: true
+              render: ({ isMasterOrder }) => (
+                <>
+                  <Checkbox checked={isMasterOrder} readOnly />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "totalFollowers",
               sortable: true,
               render: ({ totalFollowers }) => totalFollowers,
-              resizable: true
+              resizable: true,
             },
-
           ]}
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}

@@ -1,5 +1,11 @@
 import { TransactionsListFilter } from "@/features/Transactions";
-import { Anchor, Box, Breadcrumbs, Container, Space } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Breadcrumbs,
+  Container,
+  Space,
+} from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
 export default function Page() {

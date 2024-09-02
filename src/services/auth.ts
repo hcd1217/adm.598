@@ -48,10 +48,12 @@ export function updateUserApi(
 }
 
 export async function getUserListApi() {
-
-  const response = await api.post<ApiResponse<UserPayload[]>>("/internal-api/get-all-users", {
-    "clearCache": false
-  });
+  const response = await api.post<ApiResponse<UserPayload[]>>(
+    "/internal-api/get-all-users",
+    {
+      clearCache: false,
+    },
+  );
   if (response.data?.result) {
     return response.data;
   }

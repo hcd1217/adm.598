@@ -13,8 +13,8 @@ export default function AppLayout({
       mih={"100vh"}
       styles={{
         root: {
-          overflow: "hidden"
-        }
+          overflow: "hidden",
+        },
       }}
     >
       <Sidebar />

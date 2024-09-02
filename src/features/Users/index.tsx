@@ -7,19 +7,32 @@ import {
   Checkbox,
   Flex,
   Space,
-  TextInput, Title
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 
 export function UserListFilter() {
   const {
-    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE, sortStatus, setSortStatus
-  } = useRecords<{
-    depositCode: string;
-    email: string;
-    mobile: string;
-  }, UserPayload>("/internal-api/get-all-users", getUserListApi, {
+    form,
+    data,
+    refresh,
+    items,
+    isLoading,
+    page,
+    setPage,
+    PAGE_SIZE,
+    sortStatus,
+    setSortStatus,
+  } = useRecords<
+    {
+      depositCode: string;
+      email: string;
+      mobile: string;
+    },
+    UserPayload
+  >("/internal-api/get-all-users", getUserListApi, {
     depositCode: "",
     email: "",
     mobile: "",
@@ -40,7 +53,7 @@ export function UserListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => { })}>
+      <form onSubmit={form.onSubmit(() => {})}>
         <Flex gap={10} wrap={"wrap"}>
           <TextInput
             label="UID"

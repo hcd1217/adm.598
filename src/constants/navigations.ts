@@ -1,4 +1,8 @@
-import { IconBusinessplan, IconGauge, IconUsers } from "@tabler/icons-react";
+import {
+  IconBusinessplan,
+  IconGauge,
+  IconUsers,
+} from "@tabler/icons-react";
 
 export const navigation: AsideNavLink[] = [
   {

@@ -9,34 +9,39 @@ import {
   Card,
   Checkbox,
   Flex,
-  Select,
   Space,
   Text,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
-import { keys } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState } from "react";
 
 export function PositionsListFilter() {
-
   const [sortStatus, setSortStatus] = useState<
-  DataTableSortStatus<PositionPayload>
+    DataTableSortStatus<PositionPayload>
   >({
     columnAccessor: "depositCode",
     direction: "asc",
   });
 
   const {
-    form, data, refresh, items, isLoading, page, setPage, PAGE_SIZE
-  } = useRecords<{
-    accountId: string;
-    side: string;
-  }, PositionPayload>("/internal-api/get-positions", getPositionsApi, {
-    accountId: "",
-    side: "",
+    form,
+    data,
+    refresh,
+    items,
+    isLoading,
+    page,
+    setPage,
+    PAGE_SIZE,
+  } = useRecords<
+    {
+      userId: string;
+    },
+    PositionPayload
+  >("/internal-api/get-positions", getPositionsApi, {
+    userId: "",
   });
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -58,17 +63,10 @@ export function PositionsListFilter() {
           <Flex gap={10}>
             <TextInput
               label="UID"
-              key={form.key("accountId")}
-              {...form.getInputProps("accountId")}
+              key={form.key("userId")}
+              {...form.getInputProps("userId")}
             />
           </Flex>
-          <Select
-            key={form.key("side")}
-            {...form.getInputProps("side")}
-            label="Order Side"
-            searchable
-            data={keys(OrderSide)}
-          ></Select>
         </Flex>
       </form>
       <Space my={"md"} />
@@ -82,177 +80,199 @@ export function PositionsListFilter() {
           idAccessor={"id"}
           columns={[
             {
-              accessor: "accountId",
-              render: ({ accountId }) => (
-                <>
-                  {accountId}
-                </>
-              ),
+              accessor: "userId",
+              render: ({ userId }) => <>{userId}</>,
               sortable: true,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "symbolId",
-              render: ({ symbolId }) => (
-                <>
-                  {symbolId}
-                </>
-              ),
+              render: ({ symbolId }) => <>{symbolId}</>,
               sortable: true,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "side",
               sortable: true,
               render: ({ side }) => (
                 <>
-                  <Button fullWidth bg={side === OrderSide.SELL ? "red" : TRANSACTION_STATUS_COLORS.DONE} size="xs">{side}</Button>
+                  <Button
+                    fullWidth
+                    bg={
+                      side === OrderSide.SELL
+                        ? "red"
+                        : TRANSACTION_STATUS_COLORS.DONE
+                    }
+                    size="xs"
+                  >
+                    {side}
+                  </Button>
                 </>
               ),
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "createdAt",
               sortable: true,
-              render: ({ createdAt }) => <Text
-                styles={{
-                  root: {
-                    whiteSpace: "nowrap"
-                  }
-                }}
-                fz={14}
-              >{new Date(createdAt).toLocaleString()}</Text>,
-              resizable: true
+              render: ({ createdAt }) => (
+                <>
+                  <Text
+                    styles={{
+                      root: {
+                        whiteSpace: "nowrap",
+                      },
+                    }}
+                    fz={14}
+                  >
+                    {new Date(createdAt).toLocaleString()}
+                  </Text>
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "closedAt",
               sortable: true,
-              render: ({ closedAt }) => <Text
-                styles={{
-                  root: {
-                    whiteSpace: "nowrap"
-                  }
-                }}
-                fz={14}
-              >{new Date(closedAt).toLocaleString()}</Text>,
-              resizable: true
+              render: ({ closedAt }) => (
+                <>
+                  <Text
+                    styles={{
+                      root: {
+                        whiteSpace: "nowrap",
+                      },
+                    }}
+                    fz={14}
+                  >
+                    {new Date(closedAt).toLocaleString()}
+                  </Text>
+                </>
+              ),
+              resizable: true,
             },
-
 
             {
               accessor: "leverage",
               render: ({ leverage }) => leverage,
               sortable: true,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "volume",
               sortable: true,
               render: ({ volume }) => volume,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "closedVolume",
               sortable: true,
-              render: ({ closedVolume }) => <>
-                <NumberFormat value={closedVolume} decimalPlaces={4} />
-              </>,
-              resizable: true
+              render: ({ closedVolume }) => (
+                <>
+                  <NumberFormat
+                    value={closedVolume}
+                    decimalPlaces={4}
+                  />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "averageClosePrice",
               sortable: true,
               render: ({ averageClosePrice }) => averageClosePrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "maxOpenInterest",
               sortable: true,
               render: ({ maxOpenInterest }) => maxOpenInterest,
-              resizable: true
+              resizable: true,
             },
 
             {
               accessor: "fee",
               sortable: true,
               render: ({ fee }) => fee,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "entryPrice",
               sortable: true,
               render: ({ entryPrice }) => entryPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "markPrice",
               sortable: true,
               render: ({ markPrice }) => markPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "takeProfitPrice",
               sortable: true,
               render: ({ takeProfitPrice }) => takeProfitPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "stopLossPrice",
               sortable: true,
               render: ({ stopLossPrice }) => stopLossPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "trailingStop",
               sortable: true,
               render: ({ trailingStop }) => trailingStop,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "liquidationPrice",
               sortable: true,
               render: ({ liquidationPrice }) => liquidationPrice,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "margin",
               sortable: true,
               render: ({ margin }) => margin,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "accumulatedFee",
               sortable: true,
               render: ({ accumulatedFee }) => accumulatedFee,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "realizedPnl",
               sortable: true,
               render: ({ realizedPnl }) => realizedPnl,
-              resizable: true
+              resizable: true,
             },
             {
               accessor: "isMasterPosition",
               sortable: true,
-              render: ({ isMasterPosition }) => <>
-                <Checkbox readOnly checked={isMasterPosition} />
-              </>,
-              resizable: true
+              render: ({ isMasterPosition }) => (
+                <>
+                  <Checkbox readOnly checked={isMasterPosition} />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "isCopy",
               sortable: true,
-              render: ({ isCopy }) => <>
-                <Checkbox readOnly checked={isCopy} />
-              </>,
-              resizable: true
+              render: ({ isCopy }) => (
+                <>
+                  <Checkbox readOnly checked={isCopy} />
+                </>
+              ),
+              resizable: true,
             },
             {
               accessor: "totalFollowers",
               sortable: true,
               render: ({ totalFollowers }) => totalFollowers,
-              resizable: true
+              resizable: true,
             },
           ]}
           sortStatus={sortStatus}

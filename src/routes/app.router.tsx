@@ -11,7 +11,9 @@ const AccountPage = lazy(() => import("@/pages/account.page"));
 const RootPage = lazy(() => import("@/pages/dashboard.page"));
 const ordersPage = lazy(() => import("@/pages/orders.page"));
 const positionsPage = lazy(() => import("@/pages/positions.page"));
-const TransactionsPage = lazy(() => import("@/pages/transactions.page"));
+const TransactionsPage = lazy(
+  () => import("@/pages/transactions.page"),
+);
 const usersPage = lazy(() => import("@/pages/users.page"));
 
 export const AppRouter = createBrowserRouter(

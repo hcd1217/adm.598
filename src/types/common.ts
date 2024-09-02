@@ -127,5 +127,3 @@ export const updateUserPayloadSchema = z
   .required({ type: true });
 
 export const PAGE_SIZE = 20;
-
-
