@@ -17,18 +17,6 @@ export async function login(form: TLoginForm) {
   return response.data;
 }
 
-type RegisterData = ApiResponse<{
-  token: string;
-}>;
-
-export async function register(form: Record<string, unknown>) {
-  const response = await api.post<RegisterData>(
-    "/api/register",
-    form,
-  );
-  return response.data.data;
-}
-
 export async function identify() {
   const response =
     await api.get<ApiResponse<AuthenticationPayload>>("/api/me");
@@ -63,9 +51,7 @@ export async function getUserListApi() {
 }
 
 export async function getSymbolsListApi() {
-  const response = await api.get<
-    ApiResponse<{ symbols: SymbolConfig[] }>
-  >("/api/information/symbols");
+  const response = await api.get<ApiResponse<{ symbols: SymbolConfig[] }>>("/api/information/symbols");
   if (response.data?.result) {
     return response.data;
   }

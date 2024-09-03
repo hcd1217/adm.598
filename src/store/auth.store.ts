@@ -1,4 +1,4 @@
-import { identify, login, register } from "@/services/auth";
+import { identify, login } from "@/services/auth";
 import { AuthenticationPayload } from "@/types/common";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -8,7 +8,6 @@ interface IAuthStore {
   user: null | AuthenticationPayload;
   setUser: (user: AuthenticationPayload | null) => void;
   setLoading: (loading: boolean) => void;
-  register: (form: Record<string, unknown>) => Promise<void>;
   login: (form: TLoginForm) => Promise<void>;
   auth: () => Promise<void>;
   logout: () => void;
@@ -29,26 +28,6 @@ export const useAuthStore = create<IAuthStore>()(
       },
       setLoading(loading) {
         set({ loading }, false, "auth:loading");
-      },
-
-      async register(form) {
-        const { setLoading, auth } = get();
-
-        setLoading(true);
-
-        try {
-          const { token } = await register(form);
-
-          localStorage.setItem("token", token);
-
-          await auth();
-        } catch (e) {
-          if (e instanceof Error) {
-            throw e;
-          }
-        } finally {
-          setLoading(false);
-        }
       },
 
       async login(form) {

@@ -1,13 +1,14 @@
+import logger from "@/helpers/logger";
 import { PAGE_SIZE } from "@/types/common";
 import { PositionPayload } from "@/types/record";
 import { api } from "@/utils/api";
 
 export async function getPositionsApi(
-  params: unknown = {},
-  cursor: unknown = null,
+  params: Record<string, string> = {},
+  cursor: string | null = null,
   limit: number = PAGE_SIZE,
 ) {
-  window.console.log("CURSOR", cursor);
+  logger.debug("CURSOR", cursor);
   const formData = { ...params };
   const userId =
     formData.userId && (params.userId as string).toString().trim();

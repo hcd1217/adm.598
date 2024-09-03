@@ -1,4 +1,4 @@
-import { navigation } from "@/constants/navigations";
+import { navigation } from "@/constants/navigation";
 import { group, listify } from "radash";
 
 export default function getGroupRoutes(

@@ -1,3 +1,4 @@
+import logger from "@/helpers/logger";
 import { useInfoStore } from "@/store/info.store";
 import { PAGE_SIZE } from "@/types/common";
 import { useForm, UseFormReturnType } from "@mantine/form";
@@ -35,7 +36,7 @@ export function useRecords<T, P>(
       }
     },
   });
-  const { getUserByUId } = useInfoStore()
+  const { getUserByUId } = useInfoStore();
 
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -43,9 +44,9 @@ export function useRecords<T, P>(
   const { data, isLoading } = useSWR(
     [key, cursor, form.getValues()],
     ([, cursor, params]) => {
-      console.log("PARAMS", params)
+      logger.debug("PARAMS", params);
       if (params.userId) {
-        params['userId'] = getUserByUId(params.userId)?.id ?? params.userId
+        params["userId"] = getUserByUId(params.userId)?.id ?? params.userId;
       }
       return mt(params, cursor, PAGE_SIZE + 1);
     },

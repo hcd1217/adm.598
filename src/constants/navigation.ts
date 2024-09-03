@@ -13,7 +13,6 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/",
     icon: IconGauge,
-    hidden: true,
   },
   {
     group: "Main",
@@ -43,4 +42,4 @@ export const navigation: AsideNavLink[] = [
     route: () => "/transactions",
     icon: IconBusinessPlan,
   },
-].filter((nav) => !nav.hidden);
+];

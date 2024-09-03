@@ -6,8 +6,12 @@
     "source.removeUnusedImports": "explicit"
   },
   "cSpell.words": [
+    "cobo",
     "fontsource",
+    "listify",
+    "mantine",
+    "radash",
     "tabler",
-    "mantine"
+    "zustand"
   ]
 }

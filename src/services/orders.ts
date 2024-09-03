@@ -1,14 +1,15 @@
+import logger from "@/helpers/logger";
 import { PAGE_SIZE } from "@/types/common";
 import { OrderPayload } from "@/types/record";
 import { api } from "@/utils/api";
 
 export async function getOrdersApi(
-  params: unknown = {},
-  cursor: unknown = null,
+  params: Record<string, string> = {},
+  cursor: string | null = null,
   limit: number = PAGE_SIZE,
 ) {
   const formData = { ...params };
-  if ((formData.status as unknown[]).length === 0) {
+  if ((formData.status).length === 0) {
     delete formData["status"];
   }
   const userId =
@@ -19,7 +20,7 @@ export async function getOrdersApi(
   if (cursor !== null) {
     formData["cursor"] = cursor;
   }
-  window.console.log(params, formData);
+  logger.debug(params, formData);
   const response = await api.post<ApiResponse<OrderPayload[]>>(
     "/internal-api/get-orders",
     { ...formData, limit },

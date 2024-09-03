@@ -1,14 +1,15 @@
+import logger from "@/helpers/logger";
 import { PAGE_SIZE } from "@/types/common";
 import { TransactionPayload } from "@/types/record";
 import { api } from "@/utils/api";
 
 export async function getTransactionsApi(
-  params: unknown = {},
-  cursor: unknown = null,
+  params: Record<string, string | string[]> = {},
+  cursor: string | null = null,
   limit: number = PAGE_SIZE,
 ) {
   const formData = { ...params };
-  if ((formData.types as unknown[]).length === 0) {
+  if ((formData.types as string[]).length === 0) {
     delete formData["types"];
   }
   const userId =
@@ -19,7 +20,7 @@ export async function getTransactionsApi(
   if (cursor !== null) {
     formData["cursor"] = cursor;
   }
-  window.console.log(params, formData);
+  logger.debug(params, formData);
   const response = await api.post<ApiResponse<TransactionPayload[]>>(
     "/internal-api/get-transactions",
     { ...formData, limit },
