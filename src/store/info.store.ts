@@ -9,6 +9,9 @@ const findUser = memoizeOne((users: UserPayload[], userId) => {
   return users.find((u) => u.id === userId);
 });
 
+const findUserByUid = memoizeOne((users: UserPayload[], uid) => {
+  return users.find((u) => u.depositCode === uid);
+});
 const findAccount = memoizeOne(
   (users: UserPayload[], userId, accountId) => {
     const user = users.find((u) => u.id === userId);
@@ -30,6 +33,7 @@ interface IUsersStore {
   setUsers: (users: UserPayload[]) => void;
   setLoading: (loading: boolean) => void;
   getUserById: (userId: string) => undefined | UserPayload;
+  getUserByUId: (userId: string) => undefined | UserPayload;
   getAccountUserById: (
     userId: string,
     accountId: string,
@@ -79,7 +83,10 @@ export const useInfoStore = create<IUsersStore>()(
         const { users } = get();
         return findUser(users, userId);
       },
-
+      getUserByUId(userId) {
+        const { users } = get();
+        return findUserByUid(users, userId);
+      },
       getSymbolById(symbolId) {
         const { symbols } = get();
         return findSymbol(symbols, symbolId);

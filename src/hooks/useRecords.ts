@@ -1,3 +1,4 @@
+import { useInfoStore } from "@/store/info.store";
 import { PAGE_SIZE } from "@/types/common";
 import { useForm, UseFormReturnType } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -34,12 +35,18 @@ export function useRecords<T, P>(
       }
     },
   });
+  const { getUserByUId } = useInfoStore()
+
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(query, 200);
   const { data, isLoading } = useSWR(
     [key, cursor, form.getValues()],
     ([, cursor, params]) => {
+      console.log("PARAMS", params)
+      if (params.userId) {
+        params['userId'] = getUserByUId(params.userId)?.id ?? params.userId
+      }
       return mt(params, cursor, PAGE_SIZE + 1);
     },
     {
