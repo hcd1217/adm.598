@@ -1,12 +1,18 @@
 import { TransactionType } from "@/common/enums";
+import {
+  AccountName,
+  AccountTypeName,
+} from "@/components/AccountInfos";
 import NumberFormat from "@/components/NumberFormat";
 import { useRecords } from "@/hooks/useRecords";
 import { getTransactionsApi } from "@/services/transactions";
+import { TransactionPayload } from "@/types/record";
 import {
   TRANSACTION_STATUS_COLORS,
   TRANSACTION_TYPE_COLORS,
 } from "@/utils/color";
 import {
+  ActionIcon,
   Box,
   Button,
   Card,
@@ -17,32 +23,37 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconRefresh } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconRefresh,
+} from "@tabler/icons-react";
 import { keys } from "lodash";
 import { DataTable } from "mantine-datatable";
+
+type RecordFilterType = {
+  userId: string;
+  types: string[];
+};
 
 export function TransactionsListFilter() {
   const {
     form,
-    data,
     refresh,
     items,
     isLoading,
-    page,
-    setPage,
-    PAGE_SIZE,
-    sortStatus,
-    setSortStatus,
-  } = useRecords<
+    loadNext,
+    loadPrev,
+    disabledNext,
+    disabledPrev,
+  } = useRecords<RecordFilterType, TransactionPayload>(
+    "/internal-api/get-transactions",
+    getTransactionsApi,
     {
-      userId: string;
-      types: string[];
+      userId: "",
+      types: [],
     },
-    TransactionPayload
-  >("/internal-api/get-transactions", getTransactionsApi, {
-    userId: "",
-    types: [],
-  });
+  );
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -81,7 +92,7 @@ export function TransactionsListFilter() {
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <DataTable
-          height={"80vh"}
+          height={"75vh"}
           withTableBorder
           withColumnBorders
           records={items}
@@ -91,13 +102,18 @@ export function TransactionsListFilter() {
             {
               accessor: "userId",
               sortable: true,
-              render: ({ userId }) => userId,
+              render: ({ userId }) => <AccountName userId={userId} />,
               resizable: true,
             },
             {
               accessor: "accountId",
               sortable: true,
-              render: ({ accountId }) => accountId,
+              render: ({ userId, accountId }) => (
+                <AccountTypeName
+                  userId={userId}
+                  accountId={accountId}
+                />
+              ),
               resizable: true,
             },
 
@@ -119,7 +135,20 @@ export function TransactionsListFilter() {
             {
               accessor: "txId",
               sortable: true,
-              render: ({ txId }) => txId,
+              render: ({ txId }) => (
+                <>
+                  <Text
+                    component="a"
+                    fz={12}
+                    c={"blue"}
+                    td={"underline"}
+                    href={`https://tronscan.org/#/transaction/${txId}`}
+                    target="_blank"
+                  >
+                    {txId}
+                  </Text>
+                </>
+              ),
               resizable: true,
             },
             {
@@ -232,13 +261,21 @@ export function TransactionsListFilter() {
               sortable: true,
             },
           ]}
-          sortStatus={sortStatus}
-          onSortStatusChange={setSortStatus}
-          totalRecords={data?.result.length}
-          recordsPerPage={PAGE_SIZE}
-          page={page}
-          onPageChange={(p) => setPage(p)}
         />
+        <Flex py={"xs"} justify={"center"} gap={10}>
+          <ActionIcon
+            onClick={() => loadPrev()}
+            disabled={disabledPrev}
+          >
+            <IconArrowLeft />
+          </ActionIcon>
+          <ActionIcon
+            onClick={() => loadNext()}
+            disabled={disabledNext}
+          >
+            <IconArrowRight />
+          </ActionIcon>
+        </Flex>
       </Box>
     </Box>
   );

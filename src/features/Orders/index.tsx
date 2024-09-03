@@ -1,8 +1,15 @@
 import { OrderSide, OrderStatus, OrderType } from "@/common/enums";
+import {
+  AccountName,
+  AccountTypeName,
+  SymbolName,
+} from "@/components/AccountInfos";
 import { useRecords } from "@/hooks/useRecords";
 import { getOrdersApi } from "@/services/orders";
+import { OrderPayload } from "@/types/record";
 import { TRANSACTION_STATUS_COLORS } from "@/utils/color";
 import {
+  ActionIcon,
   Box,
   Button,
   Card,
@@ -14,9 +21,18 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconRefresh } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconRefresh,
+} from "@tabler/icons-react";
 import { keys } from "lodash";
 import { DataTable } from "mantine-datatable";
+
+type RecordFilterType = {
+  userId: string;
+  status: string[];
+};
 
 export const doSearch = (
   debouncedQuery: string,
@@ -35,26 +51,22 @@ export const doSearch = (
 
 export function OrderListFilter() {
   const {
-    sortStatus,
-    setSortStatus,
     form,
-    data,
     refresh,
     items,
     isLoading,
-    page,
-    setPage,
-    PAGE_SIZE,
-  } = useRecords<
+    loadNext,
+    loadPrev,
+    disabledNext,
+    disabledPrev,
+  } = useRecords<RecordFilterType, OrderPayload>(
+    "/internal-api/get-orders",
+    getOrdersApi,
     {
-      userId: string;
-      status: string[];
+      userId: "",
+      status: [],
     },
-    OrderPayload
-  >("/internal-api/get-orders", getOrdersApi, {
-    userId: "",
-    status: [],
-  });
+  );
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -91,7 +103,7 @@ export function OrderListFilter() {
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <DataTable
-          height={"80vh"}
+          height={"75vh"}
           withTableBorder
           withColumnBorders
           records={items}
@@ -117,7 +129,18 @@ export function OrderListFilter() {
             {
               accessor: "userId",
               sortable: true,
-              render: ({ userId }) => userId,
+              render: ({ userId }) => <AccountName userId={userId} />,
+              resizable: true,
+            },
+            {
+              accessor: "accountId",
+              sortable: true,
+              render: ({ userId, accountId }) => (
+                <AccountTypeName
+                  accountId={accountId}
+                  userId={userId}
+                />
+              ),
               resizable: true,
             },
             {
@@ -135,7 +158,9 @@ export function OrderListFilter() {
             {
               accessor: "symbolId",
               sortable: true,
-              render: ({ symbolId }) => symbolId,
+              render: ({ symbolId }) => (
+                <SymbolName symbolId={symbolId} />
+              ),
               resizable: true,
             },
             {
@@ -369,13 +394,21 @@ export function OrderListFilter() {
               resizable: true,
             },
           ]}
-          sortStatus={sortStatus}
-          onSortStatusChange={setSortStatus}
-          totalRecords={data?.result.length}
-          recordsPerPage={PAGE_SIZE}
-          page={page}
-          onPageChange={(p) => setPage(p)}
         />
+        <Flex py={"xs"} justify={"center"} gap={10}>
+          <ActionIcon
+            onClick={() => loadPrev()}
+            disabled={disabledPrev}
+          >
+            <IconArrowLeft />
+          </ActionIcon>
+          <ActionIcon
+            onClick={() => loadNext()}
+            disabled={disabledNext}
+          >
+            <IconArrowRight />
+          </ActionIcon>
+        </Flex>
       </Box>
     </Box>
   );

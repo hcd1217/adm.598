@@ -1,8 +1,10 @@
+import { SymbolConfig } from "@/common/types";
 import {
   AuthenticationPayload,
   updateUserPayloadSchema,
   UserUpdateType,
 } from "@/types/common";
+import { UserPayload } from "@/types/record";
 import { api } from "@/utils/api";
 import { z } from "zod";
 
@@ -54,6 +56,16 @@ export async function getUserListApi() {
       clearCache: false,
     },
   );
+  if (response.data?.result) {
+    return response.data;
+  }
+  return Promise.reject(null);
+}
+
+export async function getSymbolsListApi() {
+  const response = await api.get<
+    ApiResponse<{ symbols: SymbolConfig[] }>
+  >("/api/information/symbols");
   if (response.data?.result) {
     return response.data;
   }

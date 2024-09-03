@@ -1,5 +1,7 @@
 import {
-  IconBusinessplan,
+  // cspell:disable-next-line
+  IconBusinessplan as IconBusinessPlan,
+  IconFloatLeft,
   IconGauge,
   IconUsers,
 } from "@tabler/icons-react";
@@ -11,6 +13,7 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/",
     icon: IconGauge,
+    hidden: true,
   },
   {
     group: "Main",
@@ -24,28 +27,20 @@ export const navigation: AsideNavLink[] = [
     title: "Orders",
     access: () => true,
     route: () => "/orders",
-    icon: IconBusinessplan,
+    icon: IconBusinessPlan,
   },
   {
     group: "Main",
     title: "Positions",
     access: () => true,
     route: () => "/positions",
-    icon: IconBusinessplan,
+    icon: IconFloatLeft,
   },
   {
     group: "Main",
     title: "Transactions",
     access: () => true,
     route: () => "/transactions",
-    icon: IconBusinessplan,
+    icon: IconBusinessPlan,
   },
-  // {
-  //   group: "Main",
-  //   title: "Traders",
-  //   access: () => true,
-  //   route: () => "/traders",
-  //   comming: true,
-  //   icon: IconLock,
-  // },
-];
+].filter((nav) => !nav.hidden);

@@ -1,3 +1,5 @@
+import { Account } from "@/common/types";
+
 type TRANSACTION_TYPE =
   | "DEPOSIT"
   | "SWAP"
@@ -31,6 +33,7 @@ type UserPayload = {
   bFlag?: boolean;
   fullName?: string;
   isDemo?: boolean;
+  accounts?: Account[];
 };
 
 type PositionPayload = {

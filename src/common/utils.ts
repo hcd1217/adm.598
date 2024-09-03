@@ -1,36 +1,6 @@
 import BN from "./big-number";
+import { ONE_HOUR } from "./constants";
 import { GenericObject, SPENumber } from "./types";
-
-export function t(
-  dictionary: Record<string, string>,
-  key?: string,
-  ...args: (string | number)[]
-) {
-  if (localStorage.___CHECK_LANGUAGE___ === "1") {
-    return "xxxxxxxxx";
-  }
-  if (!key) {
-    return "";
-  }
-  if (dictionary[key]) {
-    return _convert(dictionary[key], ...args);
-  } else {
-    return _convert(key, ...args);
-  }
-}
-
-function _convert(
-  template: string,
-  ...args: (string | number)[]
-): string {
-  let result = template;
-  args.forEach((arg) => {
-    result = arg
-      ? result.replace("%s", (arg || "").toString())
-      : result;
-  });
-  return result;
-}
 
 export function randomAddress(chain?: string) {
   let list = "0123456789abcdef".split("");
@@ -228,4 +198,21 @@ export function jsonToYaml(obj: GenericObject) {
 
 export function roundNumber(value: SPENumber, k: number) {
   return Number(Number(value).toFixed(k));
+}
+
+export function endOfMonth(now = 0, timezoneOffset = 9) {
+  const offset = timezoneOffset * ONE_HOUR;
+  const today = new Date((now || Date.now()) + offset);
+  today.setUTCDate(1);
+  today.setUTCMonth(today.getUTCMonth() + 1);
+  today.setUTCHours(0, 0, 0, 0);
+  return today.getTime() - offset - 1;
+}
+
+export function beginOfMonth(now = 0, timezoneOffset = 9) {
+  const offset = timezoneOffset * ONE_HOUR;
+  const today = new Date((now || Date.now()) + offset);
+  today.setUTCDate(1);
+  today.setUTCHours(0, 0, 0, 0);
+  return today.getTime() - offset;
 }

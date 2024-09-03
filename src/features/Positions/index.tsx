@@ -1,9 +1,16 @@
 import { OrderSide } from "@/common/enums";
+import {
+  AccountName,
+  AccountTypeName,
+  SymbolName,
+} from "@/components/AccountInfos";
 import NumberFormat from "@/components/NumberFormat";
 import { useRecords } from "@/hooks/useRecords";
 import { getPositionsApi } from "@/services/positions";
+import { PositionPayload } from "@/types/record";
 import { TRANSACTION_STATUS_COLORS } from "@/utils/color";
 import {
+  ActionIcon,
   Box,
   Button,
   Card,
@@ -14,35 +21,34 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconRefresh } from "@tabler/icons-react";
-import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { useState } from "react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconRefresh,
+} from "@tabler/icons-react";
+import { DataTable } from "mantine-datatable";
+
+type RecordFilterType = {
+  userId: string;
+};
 
 export function PositionsListFilter() {
-  const [sortStatus, setSortStatus] = useState<
-    DataTableSortStatus<PositionPayload>
-  >({
-    columnAccessor: "depositCode",
-    direction: "asc",
-  });
-
   const {
     form,
-    data,
     refresh,
     items,
     isLoading,
-    page,
-    setPage,
-    PAGE_SIZE,
-  } = useRecords<
+    loadNext,
+    loadPrev,
+    disabledNext,
+    disabledPrev,
+  } = useRecords<RecordFilterType, PositionPayload>(
+    "/internal-api/get-positions",
+    getPositionsApi,
     {
-      userId: string;
+      userId: "",
     },
-    PositionPayload
-  >("/internal-api/get-positions", getPositionsApi, {
-    userId: "",
-  });
+  );
   return (
     <Box style={{ overflow: "hidden" }}>
       <Card bd={1} p={0}>
@@ -58,7 +64,7 @@ export function PositionsListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => { })}>
+      <form onSubmit={form.onSubmit(() => {})}>
         <Flex gap={10}>
           <Flex gap={10}>
             <TextInput
@@ -72,7 +78,7 @@ export function PositionsListFilter() {
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <DataTable
-          height={"80vh"}
+          height={"75vh"}
           withTableBorder
           withColumnBorders
           records={items}
@@ -81,13 +87,26 @@ export function PositionsListFilter() {
           columns={[
             {
               accessor: "userId",
-              render: ({ userId }) => <>{userId}</>,
+              render: ({ userId }) => <AccountName userId={userId} />,
+              sortable: true,
+              resizable: true,
+            },
+            {
+              accessor: "accountId",
+              render: ({ userId, accountId }) => (
+                <AccountTypeName
+                  userId={userId}
+                  accountId={accountId}
+                />
+              ),
               sortable: true,
               resizable: true,
             },
             {
               accessor: "symbolId",
-              render: ({ symbolId }) => <>{symbolId}</>,
+              render: ({ symbolId }) => (
+                <SymbolName symbolId={symbolId} />
+              ),
               sortable: true,
               resizable: true,
             },
@@ -275,13 +294,21 @@ export function PositionsListFilter() {
               resizable: true,
             },
           ]}
-          sortStatus={sortStatus}
-          onSortStatusChange={setSortStatus}
-          totalRecords={data?.result.length}
-          recordsPerPage={PAGE_SIZE}
-          page={page}
-          onPageChange={(p) => setPage(p)}
         />
+        <Flex py={"xs"} justify={"center"} gap={10}>
+          <ActionIcon
+            onClick={() => loadPrev()}
+            disabled={disabledPrev}
+          >
+            <IconArrowLeft />
+          </ActionIcon>
+          <ActionIcon
+            onClick={() => loadNext()}
+            disabled={disabledNext}
+          >
+            <IconArrowRight />
+          </ActionIcon>
+        </Flex>
       </Box>
     </Box>
   );

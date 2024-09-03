@@ -1,3 +1,5 @@
+import { TRANSACTION_TYPE, TRANSACTION_STATUS } from "@/types/record";
+
 export default class Color {
   private hex: string;
 
@@ -29,10 +31,8 @@ export default class Color {
   }
 }
 
-export const TRANSACTION_TYPE_COLORS: Record<
-  TRANSACTION_TYPE,
-  string
-> = {
+export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> =
+{
   COMMISSION_FEE: "#FF5733",
   DEPOSIT: "teal",
   DEPOSIT_COPY_FUND: "#3357FF",

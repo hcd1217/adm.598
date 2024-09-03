@@ -1,5 +1,7 @@
 import { useRecords } from "@/hooks/useRecords";
 import { getUserListApi } from "@/services/auth";
+import { UserPayload } from "@/types/record";
+import { fuzzySearchMultipleWords } from "@/utils/data";
 import {
   Box,
   Button,
@@ -11,32 +13,42 @@ import {
   Title,
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
+import { keys, values } from "lodash";
 import { DataTable } from "mantine-datatable";
+import { useMemo } from "react";
+
+type RecordFilterType = {
+  depositCode: string;
+  email: string;
+  mobile: string;
+};
 
 export function UserListFilter() {
-  const {
-    form,
-    data,
-    refresh,
-    items,
-    isLoading,
-    page,
-    setPage,
-    PAGE_SIZE,
-    sortStatus,
-    setSortStatus,
-  } = useRecords<
-    {
-      depositCode: string;
-      email: string;
-      mobile: string;
-    },
-    UserPayload
-  >("/internal-api/get-all-users", getUserListApi, {
-    depositCode: "",
-    email: "",
-    mobile: "",
-  });
+  const { form, data, refresh, isLoading, setPage, PAGE_SIZE, page } =
+    useRecords<RecordFilterType, UserPayload>(
+      "/internal-api/get-all-users",
+      getUserListApi,
+      {
+        depositCode: "",
+        email: "",
+        mobile: "",
+      },
+    );
+
+  const items = useMemo(() => {
+    let _items = [...(data?.result ?? [])];
+    const _values = form.getValues();
+    _items = fuzzySearchMultipleWords(
+      data?.result ?? [],
+      keys(_values),
+      values(_values) as string[],
+    );
+
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE;
+    const t = _items.slice(from, to);
+    return t;
+  }, [data?.result, page, form, PAGE_SIZE]);
 
   return (
     <Box>
@@ -79,6 +91,10 @@ export function UserListFilter() {
         withColumnBorders
         records={items}
         fetching={isLoading}
+        totalRecords={data?.result.length}
+        recordsPerPage={PAGE_SIZE}
+        page={page}
+        onPageChange={(p) => setPage(p)}
         columns={[
           {
             accessor: "email",
@@ -102,15 +118,18 @@ export function UserListFilter() {
           {
             accessor: "isDemo",
             title: "Demo",
-            render: ({ isDemo }) => isDemo && <Checkbox />,
+            render: ({ isDemo }) => (
+              <Checkbox checked={isDemo} readOnly />
+            ),
+          },
+          {
+            accessor: "bFlag",
+            title: "bFlag",
+            render: ({ bFlag }) => (
+              <Checkbox checked={bFlag} readOnly />
+            ),
           },
         ]}
-        sortStatus={sortStatus}
-        onSortStatusChange={setSortStatus}
-        totalRecords={data?.result.length}
-        recordsPerPage={PAGE_SIZE}
-        page={page}
-        onPageChange={(p) => setPage(p)}
       />
     </Box>
   );
