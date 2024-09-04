@@ -29,10 +29,6 @@ type DashBoardRecord = {
   diff: number;
 };
 
-function _round(value: string | number) {
-  return Math.round(Number(value)).toLocaleString();
-}
-
 export function DashBoardView() {
   const [data, setData] = useState<DashBoardRecord[]>([]);
   useEffect(() => {
@@ -41,31 +37,33 @@ export function DashBoardView() {
         {
           title: "CCI Total Assets",
           icon: "users",
-          value: _round(data.CCI_TOTAL_ASSETS),
+          value: Number(data.CCI_TOTAL_ASSETS || 0).toLocaleString(),
           diff: 0,
         },
         {
           title: "BN Equity",
           icon: "btc",
-          value: _round(data.TOTAL_BINANCE_EQUITY),
+          value: Number(
+            data.TOTAL_BINANCE_EQUITY || 0,
+          ).toLocaleString(),
           diff: 0,
         },
         {
           title: "Cobo Assets",
           icon: "bag",
-          value: _round(data.TOTAL_COBO_ASSET),
+          value: Number(data.TOTAL_COBO_ASSET || 0).toLocaleString(),
           diff: 0,
         },
         {
           title: "Commission Fee",
           icon: "receipt",
-          value: _round(-1 * Number(data.commissionFee)),
+          value: (-Number(data.commissionFee || 0)).toLocaleString(),
           diff: 0,
         },
         {
           title: "Funding Fee",
           icon: "funding",
-          value: _round(-1 * Number(data.fundingFee)),
+          value: (-Number(data.fundingFee || 0)).toLocaleString(),
           diff: 0,
         },
       ]);
@@ -110,7 +108,7 @@ export function DashBoardView() {
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 1, md: 5 }}>
+      <SimpleGrid cols={{ base: 1, xs: 1, md: 2 }}>
         {stats}
       </SimpleGrid>
     </div>
