@@ -29,6 +29,10 @@ type DashBoardRecord = {
   diff: number;
 };
 
+function _round(value: string | number) {
+  return Math.round(Number(value)).toLocaleString();
+}
+
 export function DashBoardView() {
   const [data, setData] = useState<DashBoardRecord[]>([]);
   useEffect(() => {
@@ -37,33 +41,31 @@ export function DashBoardView() {
         {
           title: "CCI Total Assets",
           icon: "users",
-          value: Number(data.CCI_TOTAL_ASSETS || 0).toLocaleString(),
+          value: _round(data.CCI_TOTAL_ASSETS),
           diff: 0,
         },
         {
           title: "BN Equity",
           icon: "btc",
-          value: Number(
-            data.TOTAL_BINANCE_EQUITY || 0,
-          ).toLocaleString(),
+          value: _round(data.TOTAL_BINANCE_EQUITY),
           diff: 0,
         },
         {
           title: "Cobo Assets",
           icon: "bag",
-          value: Number(data.TOTAL_COBO_ASSET || 0).toLocaleString(),
+          value: _round(data.TOTAL_COBO_ASSET),
           diff: 0,
         },
         {
           title: "Commission Fee",
           icon: "receipt",
-          value: (-Number(data.commissionFee || 0)).toLocaleString(),
+          value: _round(-1 * Number(data.commissionFee)),
           diff: 0,
         },
         {
           title: "Funding Fee",
           icon: "funding",
-          value: (-Number(data.fundingFee || 0)).toLocaleString(),
+          value: _round(-1 * Number(data.fundingFee)),
           diff: 0,
         },
       ]);
@@ -84,7 +86,7 @@ export function DashBoardView() {
         </Group>
 
         <Group align="flex-end" gap="xs" mt={25}>
-          <Text className={classes.value}>{stat.value}</Text>
+          <Text className={classes.value}>${stat.value}</Text>
           {stat.diff !== 0 && (
             <Text
               c={stat.diff > 0 ? "teal" : "red"}
@@ -98,15 +100,17 @@ export function DashBoardView() {
           )}
         </Group>
 
-        <Text fz="xs" c="dimmed" mt={7}>
-          Compared to previous month
-        </Text>
+        {stat.diff !== 0 && (
+          <Text fz="xs" c="dimmed" mt={7}>
+            Compared to previous month
+          </Text>
+        )}
       </Paper>
     );
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 1, md: 2 }}>
+      <SimpleGrid cols={{ base: 1, xs: 1, md: 5 }}>
         {stats}
       </SimpleGrid>
     </div>
