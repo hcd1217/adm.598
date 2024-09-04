@@ -2,7 +2,7 @@ import { OrderListFilter } from "@/features/Orders";
 import { Anchor, Breadcrumbs, Container, Space } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
-export default function Page() {
+export default function Orders() {
   return (
     <Container fluid>
       <Breadcrumbs

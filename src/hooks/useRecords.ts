@@ -1,27 +1,31 @@
 import logger from "@/helpers/logger";
 import { useInfoStore } from "@/store/info.store";
 import { PAGE_SIZE } from "@/types/common";
-import { useForm, UseFormReturnType } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
 
+type FormQuery<T> = T & { userId: string };
+type ResponseType<T> = T & { id: string };
+
 export function useRecords<T, P>(
   key: string,
   mt: (
-    req: unknown,
-    cursor: unknown,
+    params: Record<string, string | string[]>,
+    cursor: string | null,
     limit: number,
-  ) => Promise<ApiResponse<P[]>>,
-  initialValues: Record<string, unknown>,
+  ) => Promise<ApiResponse<ResponseType<P>[]>>,
+  initialValues: FormQuery<T>,
 ) {
-  const [items, setItems] = useState<P[]>([]);
-  const [nextCursor, setNextCursor] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  const [items, setItems] = useState<ResponseType<P>[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [prevCursor, setPrevCursor] = useState(null);
-  const [cursor, setCursor] = useState(null);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [prevCurs, setPrevCurs] = useState<string[]>([]);
 
-  const form = useForm<UseFormReturnType<T>>({
+  const form = useForm<FormQuery<T>>({
     mode: "uncontrolled",
     onValuesChange() {
       setQuery(Date.now().toString());
@@ -46,7 +50,8 @@ export function useRecords<T, P>(
     ([, cursor, params]) => {
       logger.debug("PARAMS", params);
       if (params.userId) {
-        params["userId"] = getUserByUId(params.userId)?.id ?? params.userId;
+        params["userId"] =
+          getUserByUId(params.userId)?.id ?? params.userId;
       }
       return mt(params, cursor, PAGE_SIZE + 1);
     },
@@ -82,18 +87,21 @@ export function useRecords<T, P>(
     }
   };
 
-  const loadRecords = useCallback(() => { }, []);
+  const loadRecords = useCallback(() => {}, []);
 
   const refresh = () => {
     form.reset();
     setQuery("");
     loadRecords();
-    form.setValues(initialValues);
   };
 
   useEffect(() => {
+    if (loaded) {
+      return;
+    }
+    setLoaded(true);
     form.setValues(initialValues);
-  }, []); // todo: fix issue loop call
+  }, [form, initialValues, loaded]);
 
   return {
     data,

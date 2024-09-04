@@ -2,7 +2,7 @@ import { PositionsListFilter } from "@/features/Positions";
 import { Anchor, Breadcrumbs, Container, Space } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
-export default function Page() {
+export default function Positions() {
   return (
     <Container fluid>
       <Breadcrumbs

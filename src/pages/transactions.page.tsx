@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
-export default function Page() {
+export default function Transactions() {
   return (
     <Container fluid>
       <Breadcrumbs

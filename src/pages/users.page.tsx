@@ -2,7 +2,7 @@ import { UserListFilter } from "@/features/Users";
 import { Anchor, Breadcrumbs, Container, Space } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 
-export default function Page() {
+export default function Users() {
   return (
     <Container fluid>
       <Breadcrumbs

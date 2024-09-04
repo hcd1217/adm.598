@@ -2,8 +2,8 @@ import { Stack } from "@mantine/core";
 import { PropsWithChildren } from "react";
 import { useRouteError } from "react-router-dom";
 
-export default function ErrorPage() {
-  const error = useRouteError() as Record<string, unknown>;
+export default function Error() {
+  const error = useRouteError() as Record<string, string>;
 
   return (
     <Stack align="center">
@@ -16,13 +16,13 @@ export default function ErrorPage() {
   );
 }
 
-ErrorPage.withLayout = function withLayout(
+Error.withLayout = function withLayout(
   Layout: React.ComponentType<PropsWithChildren>,
 ) {
   return function ErrorPageWithLayout() {
     return (
       <Layout>
-        <ErrorPage />
+        <Error />
       </Layout>
     );
   };

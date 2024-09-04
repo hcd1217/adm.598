@@ -4,7 +4,7 @@ import { PositionPayload } from "@/types/record";
 import { api } from "@/utils/api";
 
 export async function getPositionsApi(
-  params: Record<string, string> = {},
+  params: Record<string, string | string[]> = {},
   cursor: string | null = null,
   limit: number = PAGE_SIZE,
 ) {

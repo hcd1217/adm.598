@@ -24,16 +24,25 @@ type RecordFilterType = {
 };
 
 export function UserListFilter() {
-  const { form, data, refresh, isLoading, setPage, PAGE_SIZE, page } =
-    useRecords<RecordFilterType, UserPayload>(
-      "/internal-api/get-all-users",
-      getUserListApi,
-      {
-        depositCode: "",
-        email: "",
-        mobile: "",
-      },
-    );
+  const {
+    items: _t,
+    form,
+    data,
+    refresh,
+    isLoading,
+    setPage,
+    PAGE_SIZE,
+    page,
+  } = useRecords<RecordFilterType, UserPayload>(
+    "/internal-api/get-all-users",
+    getUserListApi,
+    {
+      depositCode: "",
+      email: "",
+      mobile: "",
+      userId: "",
+    },
+  );
 
   const items = useMemo(() => {
     let _items = [...(data?.result ?? [])];
@@ -42,7 +51,7 @@ export function UserListFilter() {
       data?.result ?? [],
       keys(_values),
       values(_values) as string[],
-    );
+    ) as typeof _t;
 
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE;

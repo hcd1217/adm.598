@@ -106,7 +106,7 @@ export function DashBoardView() {
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 5 }}>
+      <SimpleGrid cols={{ base: 1, xs: 1, md: 2 }}>
         {stats}
       </SimpleGrid>
     </div>

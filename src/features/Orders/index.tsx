@@ -34,21 +34,6 @@ type RecordFilterType = {
   status: string[];
 };
 
-export const doSearch = (
-  debouncedQuery: string,
-  fieldName: string,
-) => {
-  if (
-    debouncedQuery !== "" &&
-    !`${fieldName}`
-      .toLowerCase()
-      .includes(debouncedQuery.trim().toLowerCase())
-  ) {
-    return false;
-  }
-  return true;
-};
-
 export function OrderListFilter() {
   const {
     form,

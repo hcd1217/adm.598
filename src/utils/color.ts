@@ -1,4 +1,4 @@
-import { TRANSACTION_TYPE, TRANSACTION_STATUS } from "@/types/record";
+import { TRANSACTION_STATUS, TRANSACTION_TYPE } from "@/types/record";
 
 export default class Color {
   private hex: string;
@@ -31,8 +31,8 @@ export default class Color {
   }
 }
 
-export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> =
-{
+// prettier-ignore
+export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> = {
   COMMISSION_FEE: "#FF5733",
   DEPOSIT: "teal",
   DEPOSIT_COPY_FUND: "#3357FF",
@@ -48,10 +48,8 @@ export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> =
   WITHDRAW_COPY_FUND: "#D35400",
 };
 
-export const TRANSACTION_STATUS_COLORS: Record<
-  TRANSACTION_STATUS,
-  string
-> = {
+// prettier-ignore
+export const TRANSACTION_STATUS_COLORS: Record<TRANSACTION_STATUS, string> = {
   FAILED: "##ff0000",
   DONE: "#27AE60",
   PENDING: "#F39C12",

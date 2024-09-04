@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "@mantine/core";
 
-export default function Page() {
+export default function Account() {
   const { form, onSubmit, submitting } = useUserSetting();
 
   return (
