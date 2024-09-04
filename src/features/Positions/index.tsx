@@ -14,7 +14,6 @@ import {
   Box,
   Button,
   Card,
-  Checkbox,
   Flex,
   Space,
   Text,
@@ -86,13 +85,13 @@ export function PositionsListFilter() {
           idAccessor={"id"}
           columns={[
             {
-              accessor: "userId",
+              accessor: "User",
               render: ({ userId }) => <AccountName userId={userId} />,
               sortable: true,
               resizable: true,
             },
             {
-              accessor: "accountId",
+              accessor: "account",
               render: ({ userId, accountId }) => (
                 <AccountTypeName
                   userId={userId}
@@ -103,7 +102,7 @@ export function PositionsListFilter() {
               resizable: true,
             },
             {
-              accessor: "symbolId",
+              accessor: "symbol",
               render: ({ symbolId }) => (
                 <SymbolName symbolId={symbolId} />
               ),
@@ -128,6 +127,55 @@ export function PositionsListFilter() {
                   </Button>
                 </>
               ),
+              resizable: true,
+            },
+            {
+              accessor: "volume",
+              sortable: true,
+              render: ({ volume }) => volume,
+              resizable: true,
+            },
+            {
+              accessor: "Closed",
+              sortable: true,
+              render: ({ closedVolume }) => (
+                <>
+                  <NumberFormat
+                    value={closedVolume}
+                    decimalPlaces={4}
+                  />
+                </>
+              ),
+              resizable: true,
+            },
+            {
+              accessor: "entry",
+              sortable: true,
+              render: ({ entryPrice }) => entryPrice,
+              resizable: true,
+            },
+            {
+              accessor: "avgClose",
+              sortable: true,
+              render: ({ averageClosePrice }) => averageClosePrice,
+              resizable: true,
+            },
+            {
+              accessor: "liq",
+              sortable: true,
+              render: ({ liquidationPrice }) => liquidationPrice,
+              resizable: true,
+            },
+            {
+              accessor: "fee",
+              sortable: true,
+              render: ({ fee }) => fee,
+              resizable: true,
+            },
+            {
+              accessor: "maxOpenInterest",
+              sortable: true,
+              render: ({ maxOpenInterest }) => maxOpenInterest,
               resizable: true,
             },
             {
@@ -173,124 +221,6 @@ export function PositionsListFilter() {
               accessor: "leverage",
               render: ({ leverage }) => leverage,
               sortable: true,
-              resizable: true,
-            },
-            {
-              accessor: "volume",
-              sortable: true,
-              render: ({ volume }) => volume,
-              resizable: true,
-            },
-            {
-              accessor: "closedVolume",
-              sortable: true,
-              render: ({ closedVolume }) => (
-                <>
-                  <NumberFormat
-                    value={closedVolume}
-                    decimalPlaces={4}
-                  />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "averageClosePrice",
-              sortable: true,
-              render: ({ averageClosePrice }) => averageClosePrice,
-              resizable: true,
-            },
-            {
-              accessor: "maxOpenInterest",
-              sortable: true,
-              render: ({ maxOpenInterest }) => maxOpenInterest,
-              resizable: true,
-            },
-
-            {
-              accessor: "fee",
-              sortable: true,
-              render: ({ fee }) => fee,
-              resizable: true,
-            },
-            {
-              accessor: "entryPrice",
-              sortable: true,
-              render: ({ entryPrice }) => entryPrice,
-              resizable: true,
-            },
-            {
-              accessor: "markPrice",
-              sortable: true,
-              render: ({ markPrice }) => markPrice,
-              resizable: true,
-            },
-            {
-              accessor: "takeProfitPrice",
-              sortable: true,
-              render: ({ takeProfitPrice }) => takeProfitPrice,
-              resizable: true,
-            },
-            {
-              accessor: "stopLossPrice",
-              sortable: true,
-              render: ({ stopLossPrice }) => stopLossPrice,
-              resizable: true,
-            },
-            {
-              accessor: "trailingStop",
-              sortable: true,
-              render: ({ trailingStop }) => trailingStop,
-              resizable: true,
-            },
-            {
-              accessor: "liquidationPrice",
-              sortable: true,
-              render: ({ liquidationPrice }) => liquidationPrice,
-              resizable: true,
-            },
-            {
-              accessor: "margin",
-              sortable: true,
-              render: ({ margin }) => margin,
-              resizable: true,
-            },
-            {
-              accessor: "accumulatedFee",
-              sortable: true,
-              render: ({ accumulatedFee }) => accumulatedFee,
-              resizable: true,
-            },
-            {
-              accessor: "realizedPnl",
-              sortable: true,
-              render: ({ realizedPnl }) => realizedPnl,
-              resizable: true,
-            },
-            {
-              accessor: "isMasterPosition",
-              sortable: true,
-              render: ({ isMasterPosition }) => (
-                <>
-                  <Checkbox readOnly checked={isMasterPosition} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "isCopy",
-              sortable: true,
-              render: ({ isCopy }) => (
-                <>
-                  <Checkbox readOnly checked={isCopy} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "totalFollowers",
-              sortable: true,
-              render: ({ totalFollowers }) => totalFollowers,
               resizable: true,
             },
           ]}

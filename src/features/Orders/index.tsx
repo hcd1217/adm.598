@@ -96,23 +96,7 @@ export function OrderListFilter() {
           idAccessor={"id"}
           columns={[
             {
-              accessor: "type",
-              render: ({ type }) => (
-                <>
-                  <Button
-                    fullWidth
-                    bg={type === OrderType.LIMIT ? "red" : "orange"}
-                    size="xs"
-                  >
-                    {type}
-                  </Button>
-                </>
-              ),
-              sortable: true,
-              resizable: true,
-            },
-            {
-              accessor: "userId",
+              accessor: "user",
               sortable: true,
               render: ({ userId }) => <AccountName userId={userId} />,
               resizable: true,
@@ -129,19 +113,17 @@ export function OrderListFilter() {
               resizable: true,
             },
             {
-              accessor: "positionId",
+              accessor: "Master",
               sortable: true,
-              render: ({ positionId }) => positionId,
+              render: ({ isMasterOrder }) => (
+                <>
+                  <Checkbox checked={isMasterOrder} readOnly />
+                </>
+              ),
               resizable: true,
             },
             {
-              accessor: "orderId",
-              sortable: true,
-              render: ({ orderId }) => orderId,
-              resizable: true,
-            },
-            {
-              accessor: "symbolId",
+              accessor: "symbol",
               sortable: true,
               render: ({ symbolId }) => (
                 <SymbolName symbolId={symbolId} />
@@ -149,21 +131,37 @@ export function OrderListFilter() {
               resizable: true,
             },
             {
-              accessor: "clientOrderId",
+              accessor: "volume",
               sortable: true,
-              render: ({ clientOrderId }) => clientOrderId,
+              render: ({ volume }) => volume,
               resizable: true,
             },
             {
-              accessor: "forwardedOrderId",
+              accessor: "filled",
               sortable: true,
-              render: ({ forwardedOrderId }) => forwardedOrderId,
+              render: ({ filled }) => filled,
               resizable: true,
             },
             {
-              accessor: "binanceOrderId",
+              accessor: "avgPrice",
               sortable: true,
-              render: ({ binanceOrderId }) => binanceOrderId,
+              render: ({ avgPrice }) => avgPrice,
+              resizable: true,
+            },
+            {
+              accessor: "type",
+              render: ({ type }) => (
+                <>
+                  <Button
+                    fullWidth
+                    bg={type === OrderType.LIMIT ? "red" : "orange"}
+                    size="xs"
+                  >
+                    {type}
+                  </Button>
+                </>
+              ),
+              sortable: true,
               resizable: true,
             },
             {
@@ -187,36 +185,20 @@ export function OrderListFilter() {
               resizable: true,
             },
             {
-              accessor: "postOnly",
-              sortable: true,
-              render: ({ postOnly }) => (
+              accessor: "status",
+              resizable: true,
+              render: ({ status }) => (
                 <>
-                  <Checkbox readOnly checked={postOnly} />
+                  <Button
+                    fullWidth
+                    bg={TRANSACTION_STATUS_COLORS[status]}
+                    size="xs"
+                  >
+                    {status}
+                  </Button>
                 </>
               ),
-              resizable: true,
-            },
-            {
-              accessor: "reduceOnly",
               sortable: true,
-              render: ({ reduceOnly }) => (
-                <>
-                  <Checkbox readOnly checked={reduceOnly} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "price",
-              sortable: true,
-              render: ({ price }) => price,
-              resizable: true,
-            },
-            {
-              accessor: "avgPrice",
-              sortable: true,
-              render: ({ avgPrice }) => avgPrice,
-              resizable: true,
             },
             {
               accessor: "leverage",
@@ -224,7 +206,12 @@ export function OrderListFilter() {
               render: ({ leverage }) => leverage,
               resizable: true,
             },
-
+            {
+              accessor: "orderId",
+              sortable: true,
+              render: ({ orderId }) => orderId,
+              resizable: true,
+            },
             {
               accessor: "createdAt",
               sortable: true,
@@ -244,138 +231,10 @@ export function OrderListFilter() {
               ),
               resizable: true,
             },
-
-            {
-              accessor: "status",
-              resizable: true,
-              render: ({ status }) => (
-                <>
-                  <Button
-                    fullWidth
-                    bg={TRANSACTION_STATUS_COLORS[status]}
-                    size="xs"
-                  >
-                    {status}
-                  </Button>
-                </>
-              ),
-              sortable: true,
-            },
-            {
-              accessor: "volume",
-              sortable: true,
-              render: ({ volume }) => volume,
-              resizable: true,
-            },
-            {
-              accessor: "reduceVolume",
-              sortable: true,
-              render: ({ reduceVolume }) => reduceVolume,
-              resizable: true,
-            },
-            {
-              accessor: "realizedPnl",
-              sortable: true,
-              render: ({ realizedPnl }) => realizedPnl,
-              resizable: true,
-            },
             {
               accessor: "filledAt",
               sortable: true,
               render: ({ filledAt }) => filledAt,
-              resizable: true,
-            },
-            {
-              accessor: "filled",
-              sortable: true,
-              render: ({ filled }) => filled,
-              resizable: true,
-            },
-            {
-              accessor: "stopLoss",
-              sortable: true,
-              render: ({ stopLoss }) => stopLoss,
-              resizable: true,
-            },
-            {
-              accessor: "takeProfit",
-              sortable: true,
-              render: ({ takeProfit }) => takeProfit,
-              resizable: true,
-            },
-            {
-              accessor: "takeProfitTriggerBy",
-              sortable: true,
-              render: ({ takeProfitTriggerBy }) =>
-                takeProfitTriggerBy,
-              resizable: true,
-            },
-            {
-              accessor: "triggerPrice",
-              sortable: true,
-              render: ({ triggerPrice }) => triggerPrice,
-              resizable: true,
-            },
-            {
-              accessor: "triggerBy",
-              sortable: true,
-              render: ({ triggerBy }) => triggerBy,
-              resizable: true,
-            },
-            {
-              accessor: "triggerDirection",
-              sortable: true,
-              render: ({ triggerDirection }) => triggerDirection,
-              resizable: true,
-            },
-            {
-              accessor: "timeInForce",
-              sortable: true,
-              render: ({ timeInForce }) => timeInForce,
-              resizable: true,
-            },
-            {
-              accessor: "stopLossTriggerBy",
-              sortable: true,
-              render: ({ stopLossTriggerBy }) => stopLossTriggerBy,
-              resizable: true,
-            },
-            {
-              accessor: "masterOrderId",
-              sortable: true,
-              render: ({ masterOrderId }) => masterOrderId,
-              resizable: true,
-            },
-            {
-              accessor: "masterAccountId",
-              sortable: true,
-              render: ({ masterAccountId }) => masterAccountId,
-              resizable: true,
-            },
-            {
-              accessor: "isCopy",
-              sortable: true,
-              render: ({ isCopy }) => (
-                <>
-                  <Checkbox checked={isCopy} readOnly />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "isMasterOrder",
-              sortable: true,
-              render: ({ isMasterOrder }) => (
-                <>
-                  <Checkbox checked={isMasterOrder} readOnly />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "totalFollowers",
-              sortable: true,
-              render: ({ totalFollowers }) => totalFollowers,
               resizable: true,
             },
           ]}

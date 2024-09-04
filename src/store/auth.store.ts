@@ -38,8 +38,11 @@ export const useAuthStore = create<IAuthStore>()(
         try {
           const data = await login(form);
           if (data.result.token) {
-            const { token } = data.result;
-            localStorage.setItem("token", token);
+            if (data.result.token) {
+              localStorage.__TOKEN__ = data.result.token;
+            } else {
+              delete localStorage.__TOKEN__;
+            }
             await auth();
           }
         } catch (e) {
@@ -68,7 +71,7 @@ export const useAuthStore = create<IAuthStore>()(
       logout() {
         const { setUser } = get();
 
-        localStorage.removeItem("token");
+        delete localStorage.__TOKEN__;
         setUser(null);
       },
     }),

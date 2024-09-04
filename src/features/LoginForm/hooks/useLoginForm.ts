@@ -14,7 +14,7 @@ export default function useLoginForm() {
   const form = useForm({
     validate: zodResolver(schema),
     initialValues: {
-      email: "a0c3a7c842@gmail.com",
+      email: "",
       password: "",
       type: 1,
       mfaCode: "",

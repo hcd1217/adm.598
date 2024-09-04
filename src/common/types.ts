@@ -58,7 +58,7 @@ export type MarketInformation = {
 };
 
 export type SymbolConfig = {
-  id: string
+  id: string;
   name: string;
   symbol: string;
   description: string;

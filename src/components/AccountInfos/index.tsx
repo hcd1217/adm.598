@@ -4,20 +4,34 @@ import { useMemo } from "react";
 type PropsType = {
   userId: string;
   accountId?: string;
+  withContact?: boolean;
 };
 export function AccountName(props: PropsType) {
   const { getUserById } = useInfoStore();
-  const userName = useMemo(() => {
-    const info = getUserById(props.userId);
-    return (
-      info?.depositCode ??
-      info?.fullName ??
-      info?.email ??
-      info?.mobile ??
-      info?.id
-    );
+  const [contact, depositCode] = useMemo(() => {
+    const user = getUserById(props.userId);
+    if (!user) {
+      return ["", "-"];
+    }
+
+    return [
+      user?.email ?? user?.mobile ?? user?.id,
+      user.depositCode,
+    ];
   }, [props.userId, getUserById]);
-  return <div style={{ whiteSpace: "nowrap" }}>{userName}</div>;
+  return (
+    <div style={{ whiteSpace: "nowrap" }}>
+      <span
+        style={{
+          fontWeight: "bold",
+        }}
+      >
+        {depositCode}
+      </span>
+      &nbsp;
+      {props.withContact ? contact : ""}
+    </div>
+  );
 }
 
 export function AccountTypeName(props: PropsType) {

@@ -116,7 +116,6 @@ export function TransactionsListFilter() {
               ),
               resizable: true,
             },
-
             {
               accessor: "type",
               render: ({ type }) => (
@@ -133,22 +132,52 @@ export function TransactionsListFilter() {
               resizable: true,
             },
             {
-              accessor: "txId",
-              sortable: true,
-              render: ({ txId }) => (
+              accessor: "status",
+              resizable: true,
+              render: ({ status }) => (
                 <>
-                  <Text
-                    component="a"
-                    fz={12}
-                    c={"blue"}
-                    td={"underline"}
-                    href={`https://tronscan.org/#/transaction/${txId}`}
-                    target="_blank"
+                  <Button
+                    bg={TRANSACTION_STATUS_COLORS[status]}
+                    size="xs"
                   >
-                    {txId}
-                  </Text>
+                    {status}
+                  </Button>
                 </>
               ),
+              sortable: true,
+            },
+            {
+              accessor: "amount",
+              sortable: true,
+              render: ({ amount }) => (
+                <>
+                  <NumberFormat value={amount} decimalPlaces={4} />
+                </>
+              ),
+              resizable: true,
+            },
+            {
+              accessor: "fee",
+              sortable: true,
+              render: ({ fee }) => fee,
+              resizable: true,
+            },
+            {
+              accessor: "From",
+              render: ({ from }) => from,
+              sortable: true,
+              resizable: true,
+            },
+            {
+              accessor: "to",
+              sortable: true,
+              render: ({ to }) => to,
+              resizable: true,
+            },
+            {
+              accessor: "txId",
+              sortable: true,
+              render: ({ txId }) => txId,
               resizable: true,
             },
             {
@@ -163,13 +192,6 @@ export function TransactionsListFilter() {
               render: ({ toAccountId }) => toAccountId,
               resizable: true,
             },
-            {
-              accessor: "tradeId",
-              sortable: true,
-              render: ({ toAccountId }) => toAccountId,
-              resizable: true,
-            },
-
             {
               accessor: "createdAt",
               sortable: true,
@@ -191,28 +213,6 @@ export function TransactionsListFilter() {
             },
 
             {
-              accessor: "From",
-              render: ({ from }) => from,
-              sortable: true,
-              resizable: true,
-            },
-            {
-              accessor: "to",
-              sortable: true,
-              render: ({ to }) => to,
-              resizable: true,
-            },
-            {
-              accessor: "amount",
-              sortable: true,
-              render: ({ amount }) => (
-                <>
-                  <NumberFormat value={amount} decimalPlaces={4} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
               accessor: "toAmount",
               sortable: true,
               render: ({ toAmount }) => (
@@ -232,33 +232,11 @@ export function TransactionsListFilter() {
               ),
               resizable: true,
             },
-
-            {
-              accessor: "fee",
-              sortable: true,
-              render: ({ fee }) => fee,
-              resizable: true,
-            },
             {
               accessor: "memo",
               sortable: true,
               render: ({ memo }) => memo,
               resizable: true,
-            },
-            {
-              accessor: "status",
-              resizable: true,
-              render: ({ status }) => (
-                <>
-                  <Button
-                    bg={TRANSACTION_STATUS_COLORS[status]}
-                    size="xs"
-                  >
-                    {status}
-                  </Button>
-                </>
-              ),
-              sortable: true,
             },
           ]}
         />
