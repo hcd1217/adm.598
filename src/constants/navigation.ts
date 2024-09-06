@@ -3,6 +3,7 @@ import {
   IconBusinessplan as IconBusinessPlan,
   IconFloatLeft,
   IconGauge,
+  IconMail,
   IconUsers,
 } from "@tabler/icons-react";
 
@@ -41,5 +42,12 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/transactions",
     icon: IconBusinessPlan,
+  },
+  {
+    group: "Main",
+    title: "Email",
+    access: () => true,
+    route: () => "/email",
+    icon: IconMail,
   },
 ];

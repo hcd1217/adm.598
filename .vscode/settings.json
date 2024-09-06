@@ -13,6 +13,7 @@
     "mantine",
     "radash",
     "tabler",
+    "tiptap",
     "zustand"
   ]
 }

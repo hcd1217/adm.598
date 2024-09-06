@@ -48,7 +48,11 @@ export const chainSchema = z.enum([
 ]);
 
 export const userKycDataSchema = z.object({
-  country: optionalStringSchema,
+  idNumber: optionalStringSchema,
+  idType: z
+    .enum(["ID", "DRIVER_LICENSE", "PASSPORT", "OTHER"])
+    .optional(),
+  country: optionalStringSchema, // JP or other
   firstName: optionalStringSchema,
   lastName: optionalStringSchema,
   kanaFirstName: optionalStringSchema,
@@ -57,18 +61,14 @@ export const userKycDataSchema = z.object({
   romanjiLastName: optionalStringSchema,
   fullName: optionalStringSchema,
   dateOfBirth: optionalStringSchema,
-  idNumber: optionalStringSchema,
-  idType: z
-    .enum(["ID", "DRIVER_LICENSE", "PASSPORT", "OTHER"])
-    .optional(),
   address: optionalStringSchema,
+  gender: optionalStringSchema,
   images: z
     .object({
-      IDCertificateFront: optionalStringSchema,
-      IDCertificateBack: optionalStringSchema,
-      proofOfAddress: optionalStringSchema,
-      selfie: optionalStringSchema,
-      selfieWithDocument: optionalStringSchema,
+      kycLvl1Front: optionalStringSchema,
+      kycLvl1Back: optionalStringSchema,
+      kycLvl2Front: optionalStringSchema,
+      kycLvl2Back: optionalStringSchema,
     })
     .optional(),
 });
