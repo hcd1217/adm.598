@@ -49,6 +49,22 @@ export function DashBoardView() {
           diff: 0,
         },
         {
+          title: "BN Commission this month",
+          icon: "btc",
+          value: Number(
+            data.BINANCE_COMMISSION_THIS_MONTH || 0,
+          ).toLocaleString(),
+          diff: 0,
+        },
+        {
+          title: "BN Funding fee this month",
+          icon: "btc",
+          value: Number(
+            data.BINANCE_BINANCE_FUNDING_FEE_THIS_MONTH || 0,
+          ).toLocaleString(),
+          diff: 0,
+        },
+        {
           title: "Cobo Assets",
           icon: "bag",
           value: Number(data.TOTAL_COBO_ASSET || 0).toLocaleString(),

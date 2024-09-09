@@ -18,7 +18,7 @@ export function fuzzySearchMultipleWords(
   );
   return validSearchTerms.reduceRight(
     // threshold: matchSorter.rankings.ACRONYM
-    (results, term) => matchSorter(results, term, { keys }),
+    (results, term) => matchSorter(results, term, { keys, threshold: matchSorter.rankings.EQUAL }),
     rows,
   );
 }

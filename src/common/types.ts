@@ -32,8 +32,7 @@ export enum ImageType {
   AVATAR = "AVATAR",
   KYC_DATA_LEVEL_1_FRONT = "KYC_DATA_LEVEL_1_FRONT",
   KYC_DATA_LEVEL_1_BACK = "KYC_DATA_LEVEL_1_BACK",
-  KYC_DATA_LEVEL_2_FRONT = "KYC_DATA_LEVEL_2_FRONT",
-  KYC_DATA_LEVEL_2_BACK = "KYC_DATA_LEVEL_2_BACK",
+  KYC_DATA_LEVEL_2 = "KYC_DATA_LEVEL_2",
 }
 
 export type GenericObject = Record<string, unknown>;
@@ -420,6 +419,7 @@ export type PublicCopyMasterDetail = {
   avatar: string;
   masterAccountId: string;
   aum: number;
+  assets: number;
   sharing: number;
   performance: {
     all: CopyMasterPerformance;
@@ -427,7 +427,10 @@ export type PublicCopyMasterDetail = {
     m?: CopyMasterPerformance;
     q?: CopyMasterPerformance;
   };
+  startAt: number;
   followers: number;
+  followerPnL: number;
+  maxFollowers: number;
   series: number[];
   pnlRatio: number; // TODO: calculate pnl ratio
 };

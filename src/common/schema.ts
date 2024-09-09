@@ -53,22 +53,24 @@ export const userKycDataSchema = z.object({
     .enum(["ID", "DRIVER_LICENSE", "PASSPORT", "OTHER"])
     .optional(),
   country: optionalStringSchema, // JP or other
-  firstName: optionalStringSchema,
-  lastName: optionalStringSchema,
-  kanaFirstName: optionalStringSchema,
-  kanaLastName: optionalStringSchema,
-  romanjiFirstName: optionalStringSchema,
-  romanjiLastName: optionalStringSchema,
-  fullName: optionalStringSchema,
-  dateOfBirth: optionalStringSchema,
+  firstName: optionalStringSchema, // 太郎
+  lastName: optionalStringSchema, // 山田
+  kanaFirstName: optionalStringSchema, // ヤマダ
+  kanaLastName: optionalStringSchema, // タロウ
+  romanjiFirstName: optionalStringSchema, // TARO
+  romanjiLastName: optionalStringSchema, // YAMADA
+  fullName: optionalStringSchema, // YAMADA TARO
+  dateOfBirth: optionalStringSchema, // 1990-01-01
   address: optionalStringSchema,
   gender: optionalStringSchema,
+  verificationLevel: optionalStringSchema,
+  isPendingVerification: optionalBooleanSchema,
+  isRejectedVerification: optionalBooleanSchema,
   images: z
     .object({
       kycLvl1Front: optionalStringSchema,
       kycLvl1Back: optionalStringSchema,
-      kycLvl2Front: optionalStringSchema,
-      kycLvl2Back: optionalStringSchema,
+      kycLvl2: optionalStringSchema,
     })
     .optional(),
 });
@@ -152,6 +154,9 @@ export const copyMasterPerformanceSchema = z.object({
   q: periodPerformanceSchema.optional(),
   roiSeries: numberSchema.array(),
   aum: optionalNumberSchema,
+  followerPnL: optionalNumberSchema,
+  assets: optionalNumberSchema,
+  startDate: optionalNumberSchema,
   totalProfitSharing: optionalNumberSchema,
   settledAmount: optionalNumberSchema,
   unSettledAmount: optionalNumberSchema,
@@ -173,6 +178,11 @@ export const authenticationPayloadSchema = z.object({
   hasMfa: booleanSchema,
   hasAntiPhishingCode: booleanSchema,
   kycLevel: numberSchema.int().positive().min(0).max(4),
+  isPendingVerification: optionalBooleanSchema,
+  isRejectedVerification: optionalBooleanSchema,
+  kycData: userKycDataSchema.omit({
+    images: true,
+  }).optional(),
   email: optionalStringSchema,
   mobile: optionalStringSchema,
   isCopyMaster: booleanSchema,
