@@ -9,7 +9,7 @@ export default defineConfig(() => {
     plugins: [million.vite({ auto: true }), react()],
     base: "./",
     server: {
-      port: 9910,
+      port: 9911,
     },
     resolve: {
       alias: [
