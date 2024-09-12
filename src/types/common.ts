@@ -53,13 +53,14 @@ export type AuthenticationPayload = z.infer<
   typeof authenticationPayloadSchema
 >;
 
+export type UserKycDataType = z.infer<typeof userKycDataSchema>;
+
 export enum UserUpdateType {
   NICK_NAME = "NICK_NAME",
   AVATAR = "AVATAR",
   UPDATE_PASSWORD = "UPDATE_PASSWORD",
   KYC_DATA = "KYC_DATA",
   ADD_EMAIL = "ADD_EMAIL",
-  ADD_MOBILE = "ADD_MOBILE",
   ADD_MFA = "ADD_MFA",
   UPDATE_MFA = "UPDATE_MFA",
   VERIFY_EMAIL = "VERIFY_EMAIL",
@@ -89,8 +90,14 @@ export const userKycDataSchema = z.object({
       proofOfAddress: optionalStringSchema,
       selfie: optionalStringSchema,
       selfieWithDocument: optionalStringSchema,
+
+      kycLvl1Front: optionalStringSchema,
+      kycLvl1Back: optionalStringSchema,
+      kycLvl2Front: optionalStringSchema,
+      kycLvl2Back: optionalStringSchema,
     })
     .optional(),
+  gender: z.enum(["MALE", "FEMALE"]).optional(),
 });
 
 export const updateUserPayloadSchema = z
@@ -101,7 +108,6 @@ export const updateUserPayloadSchema = z
       UserUpdateType.UPDATE_PASSWORD,
       UserUpdateType.KYC_DATA,
       UserUpdateType.ADD_EMAIL,
-      UserUpdateType.ADD_MOBILE,
       UserUpdateType.ADD_MFA,
       UserUpdateType.UPDATE_MFA,
       UserUpdateType.VERIFY_EMAIL,

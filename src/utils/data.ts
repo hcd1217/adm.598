@@ -8,17 +8,21 @@ export function fuzzySearchMultipleWords(
   if (!filterValue || !filterValue.length) {
     return rows;
   }
-  const terms = filterValue;
-  if (!terms) {
+  if (!filterValue) {
     return rows;
   }
   // reduceRight will mean sorting is done by score for the _first_ entered word.
-  const validSearchTerms = terms.filter(
+  const validSearchTerms = filterValue.filter(
     (term) => term && term.toString().trim(),
   );
+
   return validSearchTerms.reduceRight(
     // threshold: matchSorter.rankings.ACRONYM
-    (results, term) => matchSorter(results, term, { keys, threshold: matchSorter.rankings.EQUAL }),
+    (results, term) =>
+      matchSorter(results, term, {
+        keys,
+        threshold: matchSorter.rankings.EQUAL,
+      }),
     rows,
   );
 }

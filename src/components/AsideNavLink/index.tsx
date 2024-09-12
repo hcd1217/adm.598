@@ -1,15 +1,15 @@
+import { useAuthStore } from "@/store/auth.store";
+import { Badge, Group, Text } from "@mantine/core";
 import {
   NavLink as RouterNavLink,
   useParams,
 } from "react-router-dom";
-import { useAuthStore } from "@/store/auth.store";
-import { Group, Text } from "@mantine/core";
 import styles from "./styles.module.css";
 
 export default function AsideNavLink({
   item,
 }: {
-  item: AsideNavLink;
+  item: IAsideNavLink;
 }) {
   const params = useParams();
   const user = useAuthStore((state) => state.user);
@@ -18,7 +18,7 @@ export default function AsideNavLink({
     <RouterNavLink
       to={item.route(user, params)}
       end={item.exact}
-      style={{ pointerEvents: item.comming ? "none" : "auto" }}
+      style={{ pointerEvents: item.coming ? "none" : "auto" }}
     >
       {({ isActive }) => (
         <Group
@@ -26,7 +26,7 @@ export default function AsideNavLink({
           gap={12}
           className={styles["aside-link__wrapper"]}
           data-active={isActive}
-          data-coming={item.comming}
+          data-coming={item.coming}
         >
           <item.icon
             width={24}
@@ -36,8 +36,11 @@ export default function AsideNavLink({
           <Text className={styles["aside-link__label"]} truncate>
             {item.title}{" "}
             <Text span size="14px">
-              {item.comming && "(Coming soon)"}
+              {item.coming && "(Coming soon)"}
             </Text>
+            {parseInt(item.badge as string) > 0 && (
+              <Badge>{item.badge}</Badge>
+            )}
           </Text>
         </Group>
       )}

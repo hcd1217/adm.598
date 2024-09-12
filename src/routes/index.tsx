@@ -5,6 +5,7 @@ import Preloader from "@/components/Preloader";
 import { useAuthStore } from "@/store/auth.store";
 
 import { useInfoStore } from "@/store/info.store";
+import { useInterval } from "@mantine/hooks";
 import { AppRouter } from "./app.router";
 import { AuthRouter } from "./auth.router";
 
@@ -15,6 +16,15 @@ export default function Router() {
 
   const fetchUsers = useInfoStore((state) => state.fetchUsers);
   const fetchSymbols = useInfoStore((state) => state.fetchSymbols);
+
+  const interval = useInterval(() => {
+    fetchUsers();
+  }, 5000);
+
+  useEffect(() => {
+    interval.start();
+    return interval.stop;
+  }, [interval]);
 
   useEffect(() => {
     Promise.allSettled([checkAuth()]).finally(() => {

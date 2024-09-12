@@ -6,7 +6,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
 
-type FormQuery<T> = T & { userId: string };
+type FormQuery<T> = T & { userId?: string };
 type ResponseType<T> = T & { id: string };
 
 export function useRecords<T, P>(
@@ -90,8 +90,10 @@ export function useRecords<T, P>(
   const loadRecords = useCallback(() => {}, []);
 
   const refresh = () => {
-    form.reset();
-    setQuery("");
+    // form.reset();
+    // setQuery("");
+    form.setValues(initialValues);
+    setCursor(null);
     loadRecords();
   };
 

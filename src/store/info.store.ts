@@ -1,6 +1,7 @@
 import { Account, SymbolConfig } from "@/common/types";
 import { getSymbolsListApi, getUserListApi } from "@/services/auth";
 import { UserPayload } from "@/types/record";
+import { fuzzySearchMultipleWords } from "@/utils/data";
 import memoizeOne from "memoize-one";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -41,15 +42,19 @@ interface IUsersStore {
   getSymbolById: (symbolId: string) => undefined | SymbolConfig;
   users: UserPayload[];
   symbols: SymbolConfig[];
+  usersPendingVerification: UserPayload[];
 }
 
 const InitialState: Pick<
+  // eslint-disable-next-line @typescript-eslint/indent
   IUsersStore,
-  "loading" | "users" | "symbols"
+  // eslint-disable-next-line @typescript-eslint/indent
+  "loading" | "users" | "symbols" | "usersPendingVerification"
 > = {
   loading: false,
   users: [],
   symbols: [],
+  usersPendingVerification: [],
 };
 
 export const useInfoStore = create<IUsersStore>()(
@@ -68,7 +73,18 @@ export const useInfoStore = create<IUsersStore>()(
           .finally(() => setLoading(false));
       },
       setUsers(users) {
-        set({ users }, false, "users:users");
+        const usersPendingVerification =
+          (fuzzySearchMultipleWords(
+            users,
+            ["isPendingKyc"],
+            ["true"],
+          ) as UserPayload[]) ?? [];
+
+        set(
+          { users, usersPendingVerification },
+          false,
+          "users:users",
+        );
       },
       setLoading(loading) {
         set({ loading }, false, "users:loading");

@@ -3,15 +3,21 @@ import { group, listify } from "radash";
 
 export default function getGroupRoutes(
   user: Record<string, unknown>,
+  badges?: Record<string, string | number>,
 ) {
-  const availableRoutes = navigation.filter((item) => {
-    if (!item.access) {
-      return true;
-    }
-    // if (!user) return false;
+  const availableRoutes = navigation
+    .map((item) => ({
+      ...item,
+      badge: badges?.[item.id as string],
+    }))
+    .filter((item) => {
+      if (!item.access) {
+        return true;
+      }
+      // if (!user) return false;
 
-    return item.access(user?.role);
-  });
+      return item.access(user?.role);
+    });
 
   const routesByGroup = group(
     availableRoutes,

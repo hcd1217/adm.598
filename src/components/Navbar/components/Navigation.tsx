@@ -3,14 +3,22 @@ import AsideNavLink from "@/components/AsideNavLink";
 import { sidebar } from "@/constants/ui";
 import getGroupRoutes from "@/helpers/getGroupRoutes";
 import { useAuthStore } from "@/store/auth.store";
+import { useInfoStore } from "@/store/info.store";
 import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
 import { useMemo } from "react";
 
 export default function Navigation() {
   const user = useAuthStore((state) => state.user);
+  const usersPendingVerification = useInfoStore(
+    (state) => state.usersPendingVerification,
+  );
   const logout = useAuthStore((state) => state.logout);
-  const routes = useMemo(() => getGroupRoutes(user), [user]);
+  const routes = useMemo(() => {
+    return getGroupRoutes(user as Record<string, unknown>, {
+      KYC_PENDING: usersPendingVerification.length,
+    });
+  }, [user, usersPendingVerification]);
   const withSpacer = (groupIndex: number) =>
     groupIndex === 0 ? 0 : 16;
 

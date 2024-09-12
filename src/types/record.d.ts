@@ -1,4 +1,5 @@
 import { Account } from "@/common/types";
+import { UserKycDataType } from "./common";
 
 type TRANSACTION_TYPE =
   | "DEPOSIT"
@@ -34,6 +35,9 @@ type UserPayload = {
   fullName?: string;
   isDemo?: boolean;
   accounts?: Account[];
+  isPendingKyc?: boolean;
+  kycLevel?: number;
+  kycData?: UserKycDataType;
 };
 
 type PositionPayload = {

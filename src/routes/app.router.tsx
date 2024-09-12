@@ -16,6 +16,7 @@ const TransactionsPage = lazy(
 );
 const usersPage = lazy(() => import("@/pages/users.page"));
 const EmailPage = lazy(() => import("@/pages/email.page"));
+const KycDataPage = lazy(() => import("@/pages/kyc-data.page"));
 
 export const AppRouter = createBrowserRouter(
   createRoutesFromChildren(
@@ -31,6 +32,7 @@ export const AppRouter = createBrowserRouter(
       <Route path="/transactions" Component={TransactionsPage} />
       <Route path="/account" Component={AccountPage} />
       <Route path="/email" Component={EmailPage} />
+      <Route path="/kyc-data" Component={KycDataPage} />
       <Route
         path={"*"}
         element={<Navigate to={"/"} replace={true} />}

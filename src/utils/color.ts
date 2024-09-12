@@ -55,3 +55,12 @@ export const TRANSACTION_STATUS_COLORS: Record<TRANSACTION_STATUS, string> = {
   PENDING: "#F39C12",
   PROCESSING: "#3357FF",
 };
+
+export const KYC_STATUS_COLORS: Record<
+  "lv1" | "lv2" | "lv3",
+  string
+> = {
+  lv1: "#d62c20",
+  lv2: "#27AE60",
+  lv3: "#F39C12",
+};

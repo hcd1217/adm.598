@@ -3,9 +3,11 @@ import {
   IconBusinessplan as IconBusinessPlan,
   IconFloatLeft,
   IconGauge,
+  IconId,
   IconMail,
   IconUsers,
 } from "@tabler/icons-react";
+import { v4 } from "uuid";
 
 export const navigation: AsideNavLink[] = [
   {
@@ -14,6 +16,7 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/",
     icon: IconGauge,
+    id: v4(),
   },
   {
     group: "Main",
@@ -21,6 +24,7 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/users",
     icon: IconUsers,
+    id: v4(),
   },
   {
     group: "Main",
@@ -28,6 +32,7 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/orders",
     icon: IconBusinessPlan,
+    id: v4(),
   },
   {
     group: "Main",
@@ -35,6 +40,7 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/positions",
     icon: IconFloatLeft,
+    id: v4(),
   },
   {
     group: "Main",
@@ -42,6 +48,7 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/transactions",
     icon: IconBusinessPlan,
+    id: v4(),
   },
   {
     group: "Main",
@@ -49,5 +56,14 @@ export const navigation: AsideNavLink[] = [
     access: () => true,
     route: () => "/email",
     icon: IconMail,
+    id: v4(),
+  },
+  {
+    group: "Main",
+    title: "KYC Pending Requests",
+    access: () => true,
+    route: () => "/kyc-data",
+    icon: IconId,
+    id: "KYC_PENDING",
   },
 ];
