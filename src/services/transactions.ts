@@ -12,6 +12,9 @@ export async function getTransactionsApi(
   if ((formData.types as string[]).length === 0) {
     delete formData["types"];
   }
+  if ((formData.statuses as string[]).length === 0) {
+    delete formData["statuses"];
+  }
   const userId =
     formData.userId && (params.userId as string).toString().trim();
   if (!userId) {

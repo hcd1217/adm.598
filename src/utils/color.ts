@@ -34,9 +34,9 @@ export default class Color {
 // prettier-ignore
 export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> = {
   COMMISSION_FEE: "#FF5733",
-  DEPOSIT: "teal",
-  DEPOSIT_COPY_FUND: "#e05e12",
-  FIAT_DEPOSIT: "#0963b8",
+  DEPOSIT: "#087f5b",
+  DEPOSIT_COPY_FUND: "#1864ab",
+  FIAT_DEPOSIT: "#862e9c",
   FUNDING_FEE: "#e36414",
   LIQUIDATION_CLEARANCE: "#8c0e23",
   REALIZED_PNL: "#8E44AD",
@@ -45,12 +45,12 @@ export const TRANSACTION_TYPE_COLORS: Record<TRANSACTION_TYPE, string> = {
   TRANSFER_IN: "#F39C12",
   TRANSFER_OUT: "#E74C3C",
   WITHDRAW: "#2C3E50",
-  WITHDRAW_COPY_FUND: "#D35400",
+  WITHDRAW_COPY_FUND: "#3bc9db",
 };
 
 // prettier-ignore
 export const TRANSACTION_STATUS_COLORS: Record<TRANSACTION_STATUS, string> = {
-  FAILED: "##d62c20",
+  FAILED: "#d62c20",
   DONE: "#27AE60",
   PENDING: "#F39C12",
   PROCESSING: "#3357FF",

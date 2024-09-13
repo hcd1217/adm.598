@@ -1,4 +1,4 @@
-import { TransactionType } from "@/common/enums";
+import { TransactionStatus, TransactionType } from "@/common/enums";
 import {
   AccountName,
   AccountTypeName,
@@ -34,6 +34,7 @@ import { DataTable } from "mantine-datatable";
 type RecordFilterType = {
   userId: string;
   types: string[];
+  statuses: string[];
 };
 
 export function TransactionsListFilter() {
@@ -52,194 +53,227 @@ export function TransactionsListFilter() {
     {
       userId: "",
       types: [],
+      statuses: [],
     },
   );
 
   return (
-    <Box style={{ overflow: "hidden" }}>
-      <Card bd={1} p={0}>
-        <Flex justify={"space-between"}>
-          <Title order={3}>Transactions list</Title>
-          <Button
-            onClick={() => refresh()}
-            title="Refresh"
-            disabled={isLoading}
-            loading={isLoading}
-          >
-            <IconRefresh />
-          </Button>
-        </Flex>
-      </Card>
-      <form onSubmit={form.onSubmit(() => {})}>
-        <Flex gap={10}>
-          <TextInput
-            label="UID"
-            key={form.key("userId")}
-            {...form.getInputProps("userId")}
-          />
-          <Box>
-            <MultiSelect
-              w={200}
-              label="Type"
-              data={keys(TransactionType)}
-              key={form.key("types")}
-              {...form.getInputProps("types")}
-              clearable
+    <Flex
+      style={{ overflow: "hidden" }}
+      direction={"column"}
+      h={"93vh"}
+    >
+      <Box>
+        <Card bd={1} p={0}>
+          <Flex justify={"space-between"}>
+            <Title order={3}>Transactions list</Title>
+            <Button
+              onClick={() => refresh()}
+              title="Refresh"
+              disabled={isLoading}
+              loading={isLoading}
+            >
+              <IconRefresh />
+            </Button>
+          </Flex>
+        </Card>
+        <form onSubmit={form.onSubmit(() => {})}>
+          <Flex gap={10}>
+            <TextInput
+              label="UID"
+              key={form.key("userId")}
+              {...form.getInputProps("userId")}
             />
-          </Box>
-        </Flex>
-      </form>
-      <Space my={"md"} />
-      <Box style={{ overflow: "hidden" }}>
-        <DataTable
-          height={"75vh"}
-          withTableBorder
-          withColumnBorders
-          records={items}
-          fetching={isLoading}
-          idAccessor={"id"}
-          columns={[
-            {
-              accessor: "userId",
-              sortable: true,
-              render: ({ userId }) => <AccountName userId={userId} />,
-              resizable: true,
-            },
-            {
-              accessor: "accountId",
-              sortable: true,
-              render: ({ userId, accountId }) => (
-                <AccountTypeName
-                  userId={userId}
-                  accountId={accountId}
-                />
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "type",
-              render: ({ type }) => (
-                <>
-                  <Button
-                    bg={TRANSACTION_TYPE_COLORS[type]}
-                    size="xs"
-                  >
-                    {type}
-                  </Button>
-                </>
-              ),
-              sortable: true,
-              resizable: true,
-            },
-            {
-              accessor: "status",
-              resizable: true,
-              render: ({ status }) => (
-                <>
-                  <Button
-                    bg={TRANSACTION_STATUS_COLORS[status]}
-                    size="xs"
-                  >
-                    {status}
-                  </Button>
-                </>
-              ),
-              sortable: true,
-            },
-            {
-              accessor: "amount",
-              sortable: true,
-              render: ({ amount }) => (
-                <>
-                  <NumberFormat value={amount} decimalPlaces={4} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "fee",
-              sortable: true,
-              render: ({ fee }) => fee,
-              resizable: true,
-            },
-            {
-              accessor: "From",
-              render: ({ from }) => from,
-              sortable: true,
-              resizable: true,
-            },
-            {
-              accessor: "to",
-              sortable: true,
-              render: ({ to }) => to,
-              resizable: true,
-            },
-            {
-              accessor: "txId",
-              sortable: true,
-              render: ({ txId }) => txId,
-              resizable: true,
-            },
-            {
-              accessor: "positionId",
-              sortable: true,
-              render: ({ positionId }) => positionId,
-              resizable: true,
-            },
-            {
-              accessor: "toAccountId",
-              sortable: true,
-              render: ({ toAccountId }) => toAccountId,
-              resizable: true,
-            },
-            {
-              accessor: "createdAt",
-              sortable: true,
-              render: ({ createdAt }) => (
-                <>
-                  <Text
-                    styles={{
-                      root: {
-                        whiteSpace: "nowrap",
-                      },
-                    }}
-                    fz={14}
-                  >
-                    {new Date(createdAt).toLocaleString()}
-                  </Text>
-                </>
-              ),
-              resizable: true,
-            },
+            <Box>
+              <MultiSelect
+                maw={300}
+                label="Transactions Type"
+                data={keys(TransactionType)}
+                key={form.key("types")}
+                {...form.getInputProps("types")}
+                clearable
+                searchable
+              />
+            </Box>
+            <Box>
+              <MultiSelect
+                maw={300}
+                label="Transactions Statuses"
+                data={keys(TransactionStatus)}
+                key={form.key("statuses")}
+                {...form.getInputProps("statuses")}
+                clearable
+                searchable
+              />
+            </Box>
+          </Flex>
+        </form>
+        <Space my={"md"} />
+      </Box>
+      <Flex
+        direction={"column"}
+        style={{ overflow: "hidden" }}
+        flex={1}
+      >
+        <Box flex={1} h={"calc(100% - 200px)"}>
+          <DataTable
+            withTableBorder
+            withColumnBorders
+            records={items}
+            fetching={isLoading}
+            idAccessor={"id"}
+            height={"100%"}
+            columns={[
+              {
+                accessor: "userId",
+                sortable: true,
+                render: ({ userId }) => (
+                  <AccountName userId={userId} />
+                ),
+                resizable: true,
+              },
+              {
+                accessor: "accountId",
+                sortable: true,
+                render: ({ userId, accountId }) => (
+                  <AccountTypeName
+                    userId={userId}
+                    accountId={accountId}
+                  />
+                ),
+                resizable: true,
+              },
+              {
+                accessor: "type",
+                render: ({ type }) => (
+                  <>
+                    <Button
+                      bg={TRANSACTION_TYPE_COLORS[type]}
+                      size="xs"
+                    >
+                      {type}
+                    </Button>
+                  </>
+                ),
+                sortable: true,
+                resizable: true,
+              },
+              {
+                accessor: "status",
+                resizable: true,
+                render: ({ status }) => (
+                  <>
+                    <Button
+                      bg={TRANSACTION_STATUS_COLORS[status]}
+                      size="xs"
+                    >
+                      {status}
+                    </Button>
+                  </>
+                ),
+                sortable: true,
+              },
+              {
+                accessor: "amount",
+                sortable: true,
+                render: ({ amount }) => (
+                  <>
+                    <NumberFormat value={amount} decimalPlaces={4} />
+                  </>
+                ),
+                resizable: true,
+              },
+              {
+                accessor: "fee",
+                sortable: true,
+                render: ({ fee }) => fee,
+                resizable: true,
+              },
+              {
+                accessor: "From",
+                render: ({ from }) => from,
+                sortable: true,
+                resizable: true,
+              },
+              {
+                accessor: "to",
+                sortable: true,
+                render: ({ to }) => to,
+                resizable: true,
+              },
+              {
+                accessor: "txId",
+                sortable: true,
+                render: ({ txId }) => txId,
+                resizable: true,
+              },
+              {
+                accessor: "positionId",
+                sortable: true,
+                render: ({ positionId }) => positionId,
+                resizable: true,
+              },
+              {
+                accessor: "toAccountId",
+                sortable: true,
+                render: ({ toAccountId }) => toAccountId,
+                resizable: true,
+              },
+              {
+                accessor: "createdAt",
+                sortable: true,
+                render: ({ createdAt }) => (
+                  <>
+                    <Text
+                      styles={{
+                        root: {
+                          whiteSpace: "nowrap",
+                        },
+                      }}
+                      fz={14}
+                    >
+                      {new Date(createdAt).toLocaleString()}
+                    </Text>
+                  </>
+                ),
+                resizable: true,
+              },
 
-            {
-              accessor: "toAmount",
-              sortable: true,
-              render: ({ toAmount }) => (
-                <>
-                  <NumberFormat value={toAmount} decimalPlaces={4} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "jpyAmount",
-              sortable: true,
-              render: ({ jpyAmount }) => (
-                <>
-                  <NumberFormat value={jpyAmount} decimalPlaces={4} />
-                </>
-              ),
-              resizable: true,
-            },
-            {
-              accessor: "memo",
-              sortable: true,
-              render: ({ memo }) => memo,
-              resizable: true,
-            },
-          ]}
-        />
+              {
+                accessor: "toAmount",
+                sortable: true,
+                render: ({ toAmount }) => (
+                  <>
+                    <NumberFormat
+                      value={toAmount}
+                      decimalPlaces={4}
+                    />
+                  </>
+                ),
+                resizable: true,
+              },
+              {
+                accessor: "jpyAmount",
+                sortable: true,
+                render: ({ jpyAmount }) => (
+                  <>
+                    <NumberFormat
+                      value={jpyAmount}
+                      decimalPlaces={4}
+                    />
+                  </>
+                ),
+                resizable: true,
+              },
+              {
+                accessor: "memo",
+                sortable: true,
+                render: ({ memo }) => memo,
+                resizable: true,
+              },
+            ]}
+          />
+        </Box>
         <Flex py={"xs"} justify={"center"} gap={10}>
           <ActionIcon
             onClick={() => loadPrev()}
@@ -254,7 +288,7 @@ export function TransactionsListFilter() {
             <IconArrowRight />
           </ActionIcon>
         </Flex>
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   );
 }
