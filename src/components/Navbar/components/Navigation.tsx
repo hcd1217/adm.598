@@ -54,7 +54,7 @@ export default function Navigation() {
         <Box p={"md"}>
           <Group
             gap={5}
-            mt={"atuo"}
+            mt={"auto"}
             ml={"auto"}
             onClick={logout}
             styles={{

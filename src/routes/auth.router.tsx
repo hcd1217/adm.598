@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 
 import AuthLayout from "@/layouts/AuthLayout";
-import LoginPage from "@/pages/auth/login.page";
 import ErrorPage from "@/pages/error.page";
+import LoginPage from "@/pages/login.page";
 
 export const AuthRouter = createBrowserRouter(
   createRoutesFromChildren(

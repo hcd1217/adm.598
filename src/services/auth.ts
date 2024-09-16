@@ -51,9 +51,10 @@ export async function getUserListApi() {
 }
 
 export async function getSymbolsListApi() {
-  const response = await api.get<
-    ApiResponse<{ symbols: SymbolConfig[] }>
-  >("/api/information/symbols");
+  type Response = ApiResponse<{ symbols: SymbolConfig[] }>;
+  const response = await api.get<Response>(
+    "/api/information/symbols",
+  );
   if (response.data?.result) {
     return response.data;
   }

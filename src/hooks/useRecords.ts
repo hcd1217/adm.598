@@ -90,8 +90,6 @@ export function useRecords<T, P>(
   const loadRecords = useCallback(() => {}, []);
 
   const refresh = () => {
-    // form.reset();
-    // setQuery("");
     form.setValues(initialValues);
     setCursor(null);
     loadRecords();

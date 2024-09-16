@@ -5,11 +5,12 @@ import {
   IconGauge,
   IconId,
   IconMail,
+  IconSettingsSpark,
   IconUsers,
 } from "@tabler/icons-react";
 import { v4 } from "uuid";
 
-export const navigation: AsideNavLink[] = [
+export const navigation: IAsideNavLink[] = [
   {
     group: "Main",
     title: "Dashboard",
@@ -57,6 +58,14 @@ export const navigation: AsideNavLink[] = [
     route: () => "/email",
     icon: IconMail,
     id: v4(),
+  },
+  {
+    group: "Main",
+    title: "APP Configs",
+    access: () => true,
+    route: () => "/app-configs",
+    icon: IconSettingsSpark,
+    id: "APP_CONFIGS",
   },
   {
     group: "Main",
