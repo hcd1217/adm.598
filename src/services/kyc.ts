@@ -9,7 +9,7 @@ export async function getKycByUserApi(params: { userId: string }) {
   if (response.data?.result) {
     return response.data.result;
   }
-  return Promise.resolve(null);
+  return Promise.reject(null);
 }
 
 export async function KycApproveApi(params: { userId: string }) {

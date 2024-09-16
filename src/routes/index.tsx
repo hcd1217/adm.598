@@ -4,6 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import Preloader from "@/components/Preloader";
 import { useAuthStore } from "@/store/auth.store";
 
+import { IS_DEV } from "@/common/utils";
 import { useInfoStore } from "@/store/info.store";
 import { useInterval } from "@mantine/hooks";
 import { AppRouter } from "./app.router";
@@ -18,8 +19,10 @@ export default function Router() {
   const fetchSymbols = useInfoStore((state) => state.fetchSymbols);
 
   const interval = useInterval(() => {
-    fetchUsers();
-  }, 5000);
+    if (!IS_DEV) {
+      fetchUsers();
+    }
+  }, 10000);
 
   useEffect(() => {
     interval.start();

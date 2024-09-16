@@ -1,3 +1,4 @@
+import Preloader from "@/components/Preloader";
 import { getKycByUserApi } from "@/services/kyc";
 import { useInfoStore } from "@/store/info.store";
 import { UserKycDataType } from "@/types/common";
@@ -21,12 +22,10 @@ import useSWR from "swr";
 
 export const kycLevelIs = memoizeOne((data: UserKycDataType) => {
   const isLevel1 = Boolean(data.firstName) && Boolean(data.lastName);
-  const isLevel2 = Boolean(
-    data.images?.kycLvl1Front && data.images?.kycLvl1Back,
-  );
-  const isLevel3 = Boolean(
-    data.images?.kycLvl2Front && data.images.kycLvl2Back,
-  );
+  const isLevel2 =
+    Boolean(data.images?.kycLvl1Front) &&
+    Boolean(data.images?.kycLvl1Back);
+  const isLevel3 = Boolean(data.images?.kycLvl2);
   const currentLevel = isLevel3 ? 3 : isLevel2 ? 2 : isLevel1 ? 1 : 0;
   const currentLevelAsLabel = [
     "Unverified",
@@ -34,6 +33,7 @@ export const kycLevelIs = memoizeOne((data: UserKycDataType) => {
     "Basic",
     "Advanced",
   ][currentLevel];
+
   const currentLevelAsColor = [
     "#ff0000",
     "#ff0000",
@@ -49,6 +49,10 @@ export const kycLevelIs = memoizeOne((data: UserKycDataType) => {
     currentLevelAsColor,
   };
 });
+const dob = memoizeOne((str: string) => {
+  str = str ?? "x/y/z";
+  return str.split("/") as string[];
+});
 
 type PropsType = {
   activeUser?: UserPayload;
@@ -56,6 +60,7 @@ type PropsType = {
 export function KycInfo({ activeUser }: PropsType) {
   // eslint-disable-next-line @typescript-eslint/indent
   const { getUserByUId } = useInfoStore();
+
   const { data } = useSWR(
     ["/get-pay-data", activeUser?.depositCode],
     ([, uid]) => {
@@ -63,6 +68,9 @@ export function KycInfo({ activeUser }: PropsType) {
       return getKycByUserApi({ userId });
     },
   );
+  if (!data) {
+    return <Preloader />;
+  }
   return (
     <Box>
       <Alert
@@ -117,12 +125,12 @@ export function KycInfo({ activeUser }: PropsType) {
             }}
           >
             <TextInput
-              label="First Name:"
+              label="First Name"
               readOnly
               value={data?.firstName}
             />
             <TextInput
-              label="Last Name:"
+              label="Last Name"
               readOnly
               value={data?.lastName}
             />
@@ -133,28 +141,36 @@ export function KycInfo({ activeUser }: PropsType) {
               sm: 2,
             }}
           >
-            <TextInput
-              label="Date of birth:"
-              readOnly
-              value={data?.dateOfBirth}
-            />
+            <SimpleGrid cols={3}>
+              <TextInput
+                label="Year"
+                readOnly
+                value={dob(data?.dateOfBirth as string)[0]}
+              />
+              <TextInput
+                label="Month"
+                readOnly
+                value={dob(data?.dateOfBirth as string)[1]}
+              />
+              <TextInput
+                label="Date"
+                readOnly
+                value={dob(data?.dateOfBirth as string)[2]}
+              />
+            </SimpleGrid>
             <TextInput
               label="Address:"
               readOnly
               value={data?.address}
             />
+            <TextInput label="Gender" readOnly value={data?.gender} />
             <TextInput
-              label="Gender:"
-              readOnly
-              value={data?.gender}
-            />
-            <TextInput
-              label="Country:"
+              label="Country"
               readOnly
               value={data?.country}
             />
             <TextInput
-              label="idType:"
+              label="Type of Document"
               readOnly
               value={data?.idType}
             />
@@ -165,54 +181,77 @@ export function KycInfo({ activeUser }: PropsType) {
             }
           >
             <InputLabel>Document Pictures:</InputLabel>
-            <SimpleGrid cols={2}>
-              <Flex direction={"column"}>
-                <Text my={"sm"} ta={"center"} fw={"bold"}>
-                  Front of Document
-                </Text>
-                <Card shadow="lg" withBorder h={300}>
-                  <Flex
-                    justify={"center"}
-                    align={"center"}
-                    h={"100%"}
-                  >
-                    <Image
-                      maw={"100%"}
-                      mah={"100%"}
-                      src={
-                        data?.images?.kycLvl2Front ??
-                        data?.images?.kycLvl1Front
-                      }
-                    />
-                  </Flex>
-                </Card>
-              </Flex>
-              <Flex direction={"column"}>
-                <Text my={"sm"} ta={"center"} fw={"bold"}>
-                  Back of Document
-                </Text>
-                <Card shadow="lg" withBorder h={300}>
-                  <Flex
-                    justify={"center"}
-                    align={"center"}
-                    h={"100%"}
-                  >
-                    <Image
-                      maw={"100%"}
-                      mah={"100%"}
-                      src={
-                        data?.images?.kycLvl2Back ??
-                        data?.images?.kycLvl1Back
-                      }
-                    />
-                  </Flex>
-                </Card>
-              </Flex>
-            </SimpleGrid>
+            {data?.images?.kycLvl2 && (
+              <>
+                <Flex direction={"column"}>
+                  <Text my={"sm"} ta={"center"} fw={"bold"}>
+                    Document Address
+                  </Text>
+                  <Card shadow="lg" withBorder h={300}>
+                    <Flex
+                      justify={"center"}
+                      align={"center"}
+                      h={"100%"}
+                    >
+                      <Image
+                        maw={"100%"}
+                        mah={"100%"}
+                        src={data?.images?.kycLvl2}
+                      />
+                    </Flex>
+                  </Card>
+                </Flex>
+              </>
+            )}
+            {!data?.images?.kycLvl2 && (
+              <SimpleGrid cols={2}>
+                <Flex direction={"column"}>
+                  <Text my={"sm"} ta={"center"} fw={"bold"}>
+                    Front of Document
+                  </Text>
+                  <Card shadow="lg" withBorder h={300}>
+                    <Flex
+                      justify={"center"}
+                      align={"center"}
+                      h={"100%"}
+                    >
+                      <Image
+                        maw={"100%"}
+                        mah={"100%"}
+                        src={
+                          data?.images?.kycLvl2 ??
+                          data?.images?.kycLvl1Front
+                        }
+                      />
+                    </Flex>
+                  </Card>
+                </Flex>
+                <Flex direction={"column"}>
+                  <Text my={"sm"} ta={"center"} fw={"bold"}>
+                    Back of Document
+                  </Text>
+                  <Card shadow="lg" withBorder h={300}>
+                    <Flex
+                      justify={"center"}
+                      align={"center"}
+                      h={"100%"}
+                    >
+                      <Image
+                        maw={"100%"}
+                        mah={"100%"}
+                        src={
+                          data?.images?.kycLvl2 ??
+                          data?.images?.kycLvl1Back
+                        }
+                      />
+                    </Flex>
+                  </Card>
+                </Flex>
+              </SimpleGrid>
+            )}
           </Box>
         </SimpleGrid>
       </Card>
     </Box>
   );
 }
-

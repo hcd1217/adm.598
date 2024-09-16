@@ -95,6 +95,7 @@ export const userKycDataSchema = z.object({
       kycLvl1Back: optionalStringSchema,
       kycLvl2Front: optionalStringSchema,
       kycLvl2Back: optionalStringSchema,
+      kycLvl2: optionalStringSchema,
     })
     .optional(),
   gender: z.enum(["MALE", "FEMALE"]).optional(),
