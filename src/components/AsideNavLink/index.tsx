@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/auth.store";
-import { Badge, Group, Text } from "@mantine/core";
+import { Badge, Box, Group, Text } from "@mantine/core";
 import {
   NavLink as RouterNavLink,
   useParams,
@@ -33,15 +33,15 @@ export default function AsideNavLink({
             height={24}
             className={styles["aside-link__icon"]}
           />
-          <Text className={styles["aside-link__label"]} truncate>
+          <Box className={styles["aside-link__label"]}>
             {item.title}{" "}
-            <Text span size="14px">
+            <span style={{fontSize: "14px"}}>
               {item.coming && "(Coming soon)"}
-            </Text>
+            </span>
             {parseInt(item.badge as string) > 0 && (
               <Badge>{item.badge}</Badge>
             )}
-          </Text>
+          </Box>
         </Group>
       )}
     </RouterNavLink>
