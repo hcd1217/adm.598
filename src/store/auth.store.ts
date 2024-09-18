@@ -1,5 +1,5 @@
 import { identify, login } from "@/services/auth";
-import { AuthenticationPayload } from "@/types/common";
+import { AuthenticationPayload } from "@/common/types";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 

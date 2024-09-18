@@ -7,6 +7,7 @@ import {
   IconMail,
   IconSettingsSpark,
   IconUsers,
+  IconWorld,
 } from "@tabler/icons-react";
 import { v4 } from "uuid";
 
@@ -74,5 +75,13 @@ export const navigation: IAsideNavLink[] = [
     route: () => "/kyc-data",
     icon: IconId,
     id: "KYC_PENDING",
+  },
+  {
+    group: "Main",
+    title: "Language",
+    access: (role) => (role === "ADMIN" ? true : false),
+    route: () => "/language",
+    icon: IconWorld,
+    id: "LANGUAGE",
   },
 ];

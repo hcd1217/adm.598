@@ -16,7 +16,7 @@ export default function getGroupRoutes(
       }
       // if (!user) return false;
 
-      return item.access(user?.role);
+      return item.access(user?.isAdmin ? "ADMIN" : "UNKNOWN");
     });
 
   const routesByGroup = group(

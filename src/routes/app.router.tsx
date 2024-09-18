@@ -15,6 +15,7 @@ const OrdersPage = lazy(() => import("@/pages/orders.page"));
 const PositionsPage = lazy(() => import("@/pages/positions.page"));
 const UsersPage = lazy(() => import("@/pages/users.page"));
 const EmailPage = lazy(() => import("@/pages/email.page"));
+const LanguagePage = lazy(() => import("@/pages/language.page"));
 const KycDataPage = lazy(() => import("@/pages/kyc-data.page"));
 const AppConfigPage = lazy(() => import("@/pages/app-config.page"));
 
@@ -32,6 +33,7 @@ export const AppRouter = createBrowserRouter(
       <Route path="/transactions" Component={TransactionsPage} />
       <Route path="/account" Component={AccountPage} />
       <Route path="/email" Component={EmailPage} />
+      <Route path="/language" Component={LanguagePage} />
       <Route path="/kyc-data" Component={KycDataPage} />
       <Route path="/app-configs" Component={AppConfigPage} />
       <Route
