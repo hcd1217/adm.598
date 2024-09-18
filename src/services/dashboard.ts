@@ -5,7 +5,7 @@ type HedgeData = {
   TOTAL_COBO_ASSET: string;
   TOTAL_BINANCE_EQUITY: string;
   BINANCE_COMMISSION_THIS_MONTH: string;
-  BINANCE_BINANCE_FUNDING_FEE_THIS_MONTH: string;
+  BINANCE_FUNDING_FEE_THIS_MONTH: string;
   fundingFee: string;
   commissionFee: string;
 };

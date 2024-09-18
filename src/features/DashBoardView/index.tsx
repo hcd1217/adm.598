@@ -60,7 +60,7 @@ export function DashBoardView() {
           title: "BN Funding fee this month",
           icon: "btc",
           value: Number(
-            data.BINANCE_BINANCE_FUNDING_FEE_THIS_MONTH || 0,
+            data.BINANCE_FUNDING_FEE_THIS_MONTH || 0,
           ).toLocaleString(),
           diff: 0,
         },

@@ -1,6 +1,5 @@
 import BN from "@/common/big-number";
 import { AppConfig, SPENumber } from "@/common/types";
-import logger from "@/helpers/logger";
 import {
   getAppConfigs,
   updateAppConfigs,
@@ -48,11 +47,9 @@ export default function Page() {
         <Button
           onClick={() => {
             if (!configs || isEqual(base, configs)) {
-              logger.debug("Nothing to update");
               failed("Error", "Noting to update");
               return;
             }
-            logger.debug("update...");
             updateAppConfigs(configs)
               .then(() => {
                 success("Success", "Configs updated successfully");
@@ -75,6 +72,26 @@ export default function Page() {
         </Table.Thead>
         <Table.Tbody>
           <Table.Tr>
+            <Table.Td>FUTURE Funding fee (%)</Table.Td>
+            <Table.Td>
+              <NumberInput
+                suffix="%"
+                step={0.01}
+                value={_round(
+                  100 * (configs?.FEE.FUTURE.FR_PLUS || 0),
+                )}
+                onChange={(value) => {
+                  if (configs) {
+                    configs.FEE.FUTURE.FR_PLUS = _round(
+                      BN.div(value, 100),
+                    );
+                    setConfigs({ ...configs });
+                  }
+                }}
+              />
+            </Table.Td>
+          </Table.Tr>
+          <Table.Tr>
             <Table.Td>FUTURE Maker fee (%)</Table.Td>
             <Table.Td>
               <NumberInput
@@ -83,13 +100,10 @@ export default function Page() {
                 value={_round(100 * (configs?.FEE.FUTURE.MAKER || 0))}
                 onChange={(value) => {
                   if (configs) {
-                    logger.debug(value);
                     configs.FEE.FUTURE.MAKER = _round(
                       BN.div(value, 100),
                     );
-                    setConfigs({
-                      ...configs,
-                    });
+                    setConfigs({ ...configs });
                   }
                 }}
               />
@@ -107,9 +121,7 @@ export default function Page() {
                     configs.FEE.FUTURE.TAKER = _round(
                       BN.div(value, 100),
                     );
-                    setConfigs({
-                      ...configs,
-                    });
+                    setConfigs({ ...configs });
                   }
                 }}
               />
@@ -127,9 +139,7 @@ export default function Page() {
                     configs.FEE.SPOT.MAKER = _round(
                       BN.div(value, 100),
                     );
-                    setConfigs({
-                      ...configs,
-                    });
+                    setConfigs({ ...configs });
                   }
                 }}
               />
@@ -147,9 +157,7 @@ export default function Page() {
                     configs.FEE.SPOT.TAKER = _round(
                       BN.div(value, 100),
                     );
-                    setConfigs({
-                      ...configs,
-                    });
+                    setConfigs({ ...configs });
                   }
                 }}
               />
