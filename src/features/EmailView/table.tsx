@@ -25,7 +25,7 @@ export default function MailContainer() {
       undefined,
     );
   const [selectedMail, setSelectedMail] = useState<
-    EmailPayload | undefined
+  EmailPayload | undefined
   >(undefined);
   return (
     <Flex align="flex" h={"96vh"} gap={20}>

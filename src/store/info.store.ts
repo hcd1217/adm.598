@@ -46,9 +46,9 @@ interface IUsersStore {
 }
 
 const InitialState: Pick<
-  // eslint-disable-next-line @typescript-eslint/indent
+// eslint-disable-next-line @typescript-eslint/indent
   IUsersStore,
-  // eslint-disable-next-line @typescript-eslint/indent
+// eslint-disable-next-line @typescript-eslint/indent
   "loading" | "users" | "symbols" | "usersPendingVerification"
 > = {
   loading: false,

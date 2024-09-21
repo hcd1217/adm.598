@@ -30,14 +30,23 @@ type DashBoardRecord = {
 };
 
 export function DashBoardView() {
-  const [data, setData] = useState<DashBoardRecord[]>([]);
+  const [data, setData] = useState<(DashBoardRecord | null)[]>([]);
   useEffect(() => {
     hedgeData().then((data) => {
+      const [m, , y] = new Date()
+        .toLocaleDateString("en-US")
+        .split("/");
       setData([
         {
           title: "CCI Total Assets",
           icon: "users",
           value: Number(data.CCI_TOTAL_ASSETS || 0).toLocaleString(),
+          diff: 0,
+        },
+        {
+          title: "Cobo Assets",
+          icon: "bag",
+          value: Number(data.TOTAL_COBO_ASSET || 0).toLocaleString(),
           diff: 0,
         },
         {
@@ -49,7 +58,7 @@ export function DashBoardView() {
           diff: 0,
         },
         {
-          title: "BN Commission this month",
+          title: `BN Commission (${y}-${m})`,
           icon: "btc",
           value: Number(
             data.BINANCE_COMMISSION_THIS_MONTH || 0,
@@ -57,7 +66,7 @@ export function DashBoardView() {
           diff: 0,
         },
         {
-          title: "BN Funding fee this month",
+          title: `BN Funding fee (${y}-${m})`,
           icon: "btc",
           value: Number(
             data.BINANCE_FUNDING_FEE_THIS_MONTH || 0,
@@ -65,27 +74,36 @@ export function DashBoardView() {
           diff: 0,
         },
         {
-          title: "Cobo Assets",
-          icon: "bag",
-          value: Number(data.TOTAL_COBO_ASSET || 0).toLocaleString(),
-          diff: 0,
-        },
-        {
-          title: "Commission Fee",
+          title: `Commission Fee (${y}-${m})`,
           icon: "receipt",
           value: (-Number(data.commissionFee || 0)).toLocaleString(),
           diff: 0,
         },
         {
-          title: "Funding Fee",
+          title: `Funding Fee (${y}-${m})`,
           icon: "funding",
           value: (-Number(data.fundingFee || 0)).toLocaleString(),
+          diff: 0,
+        },
+        {
+          title: `Deposit (${y}-${m})`,
+          icon: "receipt",
+          value: Number(data.deposit || 0).toLocaleString(),
+          diff: 0,
+        },
+        {
+          title: `Withdraw (${y}-${m})`,
+          icon: "funding",
+          value: (-Number(data.withdraw || 0)).toLocaleString(),
           diff: 0,
         },
       ]);
     });
   }, []);
   const stats = data.map((stat) => {
+    if (!stat) {
+      return <>..</>;
+    }
     const Icon = icons[stat.icon];
     const DiffIcon =
       stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
@@ -124,7 +142,7 @@ export function DashBoardView() {
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 1, md: 2 }}>
+      <SimpleGrid cols={{ base: 1, xs: 1, md: 3 }}>
         {stats}
       </SimpleGrid>
     </div>

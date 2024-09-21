@@ -8,6 +8,8 @@ type HedgeData = {
   BINANCE_FUNDING_FEE_THIS_MONTH: string;
   fundingFee: string;
   commissionFee: string;
+  deposit: string;
+  withdraw: string;
 };
 
 export async function hedgeData() {

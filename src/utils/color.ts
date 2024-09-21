@@ -57,8 +57,8 @@ export const TRANSACTION_STATUS_COLORS: Record<TRANSACTION_STATUS, string> = {
 };
 
 export const KYC_STATUS_COLORS: Record<
-  "lv1" | "lv2" | "lv3",
-  string
+"lv1" | "lv2" | "lv3",
+string
 > = {
   lv1: "#d62c20",
   lv2: "#27AE60",
