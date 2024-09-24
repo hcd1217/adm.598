@@ -77,7 +77,7 @@ export function TransactionsListFilter() {
             </Button>
           </Flex>
         </Card>
-        <form onSubmit={form.onSubmit(() => {})}>
+        <form onSubmit={form.onSubmit(() => { })}>
           <Flex gap={10}>
             <TextInput
               label="UID"
@@ -126,7 +126,7 @@ export function TransactionsListFilter() {
             columns={[
               {
                 accessor: "userId",
-                sortable: true,
+                sortable: false,
                 render: ({ userId }) => (
                   <AccountName userId={userId} />
                 ),
@@ -134,7 +134,7 @@ export function TransactionsListFilter() {
               },
               {
                 accessor: "accountId",
-                sortable: true,
+                sortable: false,
                 render: ({ userId, accountId }) => (
                   <AccountTypeName
                     userId={userId}
@@ -155,7 +155,7 @@ export function TransactionsListFilter() {
                     </Button>
                   </>
                 ),
-                sortable: true,
+                sortable: false,
                 resizable: true,
               },
               {
@@ -171,11 +171,11 @@ export function TransactionsListFilter() {
                     </Button>
                   </>
                 ),
-                sortable: true,
+                sortable: false,
               },
               {
                 accessor: "amount",
-                sortable: true,
+                sortable: false,
                 render: ({ amount }) => (
                   <>
                     <NumberFormat value={amount} decimalPlaces={4} />
@@ -185,43 +185,43 @@ export function TransactionsListFilter() {
               },
               {
                 accessor: "fee",
-                sortable: true,
+                sortable: false,
                 render: ({ fee }) => fee,
                 resizable: true,
               },
               {
                 accessor: "From",
                 render: ({ from }) => from,
-                sortable: true,
+                sortable: false,
                 resizable: true,
               },
               {
                 accessor: "to",
-                sortable: true,
+                sortable: false,
                 render: ({ to }) => to,
                 resizable: true,
               },
               {
                 accessor: "txId",
-                sortable: true,
+                sortable: false,
                 render: ({ txId }) => txId,
                 resizable: true,
               },
               {
                 accessor: "positionId",
-                sortable: true,
+                sortable: false,
                 render: ({ positionId }) => positionId,
                 resizable: true,
               },
               {
                 accessor: "toAccountId",
-                sortable: true,
+                sortable: false,
                 render: ({ toAccountId }) => toAccountId,
                 resizable: true,
               },
               {
                 accessor: "createdAt",
-                sortable: true,
+                sortable: false,
                 render: ({ createdAt }) => (
                   <>
                     <Text
@@ -241,7 +241,7 @@ export function TransactionsListFilter() {
 
               {
                 accessor: "toAmount",
-                sortable: true,
+                sortable: false,
                 render: ({ toAmount }) => (
                   <>
                     <NumberFormat
@@ -254,7 +254,7 @@ export function TransactionsListFilter() {
               },
               {
                 accessor: "jpyAmount",
-                sortable: true,
+                sortable: false,
                 render: ({ jpyAmount }) => (
                   <>
                     <NumberFormat
@@ -267,7 +267,7 @@ export function TransactionsListFilter() {
               },
               {
                 accessor: "memo",
-                sortable: true,
+                sortable: false,
                 render: ({ memo }) => memo,
                 resizable: true,
               },

@@ -119,7 +119,7 @@ export function KycListFilter() {
           {
             accessor: "Action",
             title: "Action",
-            sortable: true,
+            sortable: false,
             render: (item) => (
               <>
                 <Button
@@ -146,11 +146,11 @@ export function KycListFilter() {
           {
             accessor: "email",
             render: (item) => <>{item.email}</>,
-            sortable: true,
+            // sortable: false,
           },
           {
             accessor: "depositCode",
-            sortable: true,
+            sortable: false,
             render: ({ depositCode }) => (
               <Text fw={"bold"}>{depositCode}</Text>
             ),
@@ -159,12 +159,12 @@ export function KycListFilter() {
           {
             accessor: "Posted at",
             render: () => new Date(Date.now()).toLocaleString(),
-            sortable: true,
+            sortable: false,
           },
           {
             accessor: "mobile",
             render: ({ mobile }) => mobile,
-            sortable: true,
+            sortable: false,
           },
           {
             accessor: "fullName",

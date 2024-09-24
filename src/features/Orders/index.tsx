@@ -68,7 +68,7 @@ export function OrderListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Flex gap={10}>
           <TextInput
             label="UID"
@@ -97,13 +97,13 @@ export function OrderListFilter() {
           columns={[
             {
               accessor: "user",
-              sortable: true,
+              sortable: false,
               render: ({ userId }) => <AccountName userId={userId} />,
               resizable: true,
             },
             {
               accessor: "accountId",
-              sortable: true,
+              sortable: false,
               render: ({ userId, accountId }) => (
                 <AccountTypeName
                   accountId={accountId}
@@ -114,7 +114,7 @@ export function OrderListFilter() {
             },
             {
               accessor: "Master",
-              sortable: true,
+              sortable: false,
               render: ({ isMasterOrder }) => (
                 <>
                   <Checkbox checked={isMasterOrder} readOnly />
@@ -124,7 +124,7 @@ export function OrderListFilter() {
             },
             {
               accessor: "symbol",
-              sortable: true,
+              sortable: false,
               render: ({ symbolId }) => (
                 <SymbolName symbolId={symbolId} />
               ),
@@ -132,19 +132,19 @@ export function OrderListFilter() {
             },
             {
               accessor: "volume",
-              sortable: true,
+              sortable: false,
               render: ({ volume }) => volume,
               resizable: true,
             },
             {
               accessor: "filled",
-              sortable: true,
+              sortable: false,
               render: ({ filled }) => filled,
               resizable: true,
             },
             {
               accessor: "avgPrice",
-              sortable: true,
+              sortable: false,
               render: ({ avgPrice }) => avgPrice,
               resizable: true,
             },
@@ -161,12 +161,12 @@ export function OrderListFilter() {
                   </Button>
                 </>
               ),
-              sortable: true,
+              sortable: false,
               resizable: true,
             },
             {
               accessor: "side",
-              sortable: true,
+              sortable: false,
               render: ({ side }) => (
                 <>
                   <Button
@@ -198,23 +198,23 @@ export function OrderListFilter() {
                   </Button>
                 </>
               ),
-              sortable: true,
+              sortable: false,
             },
             {
               accessor: "leverage",
-              sortable: true,
+              sortable: false,
               render: ({ leverage }) => leverage,
               resizable: true,
             },
             {
               accessor: "orderId",
-              sortable: true,
+              sortable: false,
               render: ({ orderId }) => orderId,
               resizable: true,
             },
             {
               accessor: "createdAt",
-              sortable: true,
+              sortable: false,
               render: ({ createdAt }) => (
                 <>
                   <Text
@@ -233,7 +233,7 @@ export function OrderListFilter() {
             },
             {
               accessor: "filledAt",
-              sortable: true,
+              sortable: false,
               render: ({ filledAt }) => filledAt,
               resizable: true,
             },

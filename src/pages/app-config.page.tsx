@@ -47,7 +47,7 @@ export default function Page() {
         <Button
           onClick={() => {
             if (!configs || isEqual(base, configs)) {
-              failed("Error", "Noting to update");
+              failed("Error", "Nothing to update");
               return;
             }
             updateAppConfigs(configs)

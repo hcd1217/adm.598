@@ -74,7 +74,7 @@ export function UserListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Flex gap={10} wrap={"wrap"}>
           <TextInput
             label="UID"
@@ -108,17 +108,17 @@ export function UserListFilter() {
           {
             accessor: "email",
             render: ({ email }) => email,
-            sortable: true,
+            sortable: false,
           },
           {
             accessor: "depositCode",
-            sortable: true,
+            sortable: false,
             render: ({ depositCode }) => depositCode,
           },
           {
             accessor: "mobile",
             render: ({ mobile }) => mobile,
-            sortable: true,
+            sortable: false,
           },
           {
             accessor: "fullName",

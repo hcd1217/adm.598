@@ -63,7 +63,7 @@ export function PositionsListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Flex gap={10}>
           <Flex gap={10}>
             <TextInput
@@ -87,7 +87,7 @@ export function PositionsListFilter() {
             {
               accessor: "User",
               render: ({ userId }) => <AccountName userId={userId} />,
-              sortable: true,
+              sortable: false,
               resizable: true,
             },
             {
@@ -98,7 +98,7 @@ export function PositionsListFilter() {
                   accountId={accountId}
                 />
               ),
-              sortable: true,
+              sortable: false,
               resizable: true,
             },
             {
@@ -106,12 +106,12 @@ export function PositionsListFilter() {
               render: ({ symbolId }) => (
                 <SymbolName symbolId={symbolId} />
               ),
-              sortable: true,
+              sortable: false,
               resizable: true,
             },
             {
               accessor: "side",
-              sortable: true,
+              sortable: false,
               render: ({ side }) => (
                 <>
                   <Button
@@ -131,13 +131,13 @@ export function PositionsListFilter() {
             },
             {
               accessor: "volume",
-              sortable: true,
+              sortable: false,
               render: ({ volume }) => volume,
               resizable: true,
             },
             {
               accessor: "Closed",
-              sortable: true,
+              sortable: false,
               render: ({ closedVolume }) => (
                 <>
                   <NumberFormat
@@ -150,37 +150,37 @@ export function PositionsListFilter() {
             },
             {
               accessor: "entry",
-              sortable: true,
+              sortable: false,
               render: ({ entryPrice }) => entryPrice,
               resizable: true,
             },
             {
               accessor: "avgClose",
-              sortable: true,
+              sortable: false,
               render: ({ averageClosePrice }) => averageClosePrice,
               resizable: true,
             },
             {
               accessor: "liq",
-              sortable: true,
+              sortable: false,
               render: ({ liquidationPrice }) => liquidationPrice,
               resizable: true,
             },
             {
               accessor: "fee",
-              sortable: true,
+              sortable: false,
               render: ({ fee }) => fee,
               resizable: true,
             },
             {
               accessor: "maxOpenInterest",
-              sortable: true,
+              sortable: false,
               render: ({ maxOpenInterest }) => maxOpenInterest,
               resizable: true,
             },
             {
               accessor: "createdAt",
-              sortable: true,
+              sortable: false,
               render: ({ createdAt }) => (
                 <>
                   <Text
@@ -199,7 +199,7 @@ export function PositionsListFilter() {
             },
             {
               accessor: "closedAt",
-              sortable: true,
+              sortable: false,
               render: ({ closedAt }) => (
                 <>
                   <Text
@@ -220,7 +220,7 @@ export function PositionsListFilter() {
             {
               accessor: "leverage",
               render: ({ leverage }) => leverage,
-              sortable: true,
+              sortable: false,
               resizable: true,
             },
           ]}

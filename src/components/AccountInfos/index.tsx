@@ -7,8 +7,11 @@ type PropsType = {
   withContact?: boolean;
 };
 export function AccountName(props: PropsType) {
-  const { getUserById } = useInfoStore();
+  const { getUserById, users } = useInfoStore();
   const [contact, depositCode] = useMemo(() => {
+    if (users.length === 0) {
+      return ["", "-"];
+    }
     const user = getUserById(props.userId);
     if (!user) {
       return ["", "-"];
@@ -18,7 +21,7 @@ export function AccountName(props: PropsType) {
       user?.email ?? user?.mobile ?? user?.id,
       user.depositCode,
     ];
-  }, [props.userId, getUserById]);
+  }, [props.userId, getUserById, users]);
   return (
     <div style={{ whiteSpace: "nowrap" }}>
       <span
@@ -35,14 +38,17 @@ export function AccountName(props: PropsType) {
 }
 
 export function AccountTypeName(props: PropsType) {
-  const { getAccountUserById } = useInfoStore();
+  const { getAccountUserById, users } = useInfoStore();
   const userName = useMemo(() => {
+    if (users.length === 0) {
+      return "--";
+    }
     const info = getAccountUserById(
       props.userId,
       props.accountId as string,
     );
     return info?.name;
-  }, [props.accountId, props.userId, getAccountUserById]);
+  }, [props.accountId, props.userId, getAccountUserById, users]);
   return <div style={{ whiteSpace: "nowrap" }}>{userName}</div>;
 }
 
@@ -50,10 +56,13 @@ type PropsTypeSymbol = {
   symbolId: string;
 };
 export function SymbolName(props: PropsTypeSymbol) {
-  const { getSymbolById } = useInfoStore();
+  const { getSymbolById, symbols } = useInfoStore();
   const labelName = useMemo(() => {
+    if (symbols.length === 0) {
+      return "--";
+    }
     const info = getSymbolById(props.symbolId);
     return info?.symbol ?? info?.name;
-  }, [getSymbolById, props.symbolId]);
+  }, [getSymbolById, props.symbolId, symbols]);
   return <div style={{ whiteSpace: "nowrap" }}>{labelName}</div>;
 }
