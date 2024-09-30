@@ -1,8 +1,11 @@
+import { Dictionaries } from "@/common/types";
 import {
   loadDictionary,
   updateDictionary,
 } from "@/services/language";
+import { failed as error, success, warn } from "@/utils/toast";
 import {
+  ActionIcon,
   Box,
   Button,
   Card,
@@ -12,99 +15,167 @@ import {
   Table,
   TextInput,
   Title,
+  Loader,
 } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Dictionary } from "@/common/types";
+import {
+  IconCheck,
+  IconCloudUp,
+  IconEdit,
+  IconX,
+} from "@tabler/icons-react";
+import { cloneDeep, isEqual } from "lodash";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { v4 as uuidV4 } from "uuid";
+import styles from "./index.module.css";
+
+type Dictionary = {
+  id: string;
+  key: string;
+  en: string;
+  ja: string;
+};
 
 export default function LanguageView() {
   const [filter, setFilter] = useState<string | undefined>("");
-  const [jaLanguage, setJaLanguage] = useState<Dictionary[]>([]);
-  const [enLanguage, setEnLanguage] = useState<Dictionary[]>([]);
+  const [metaData, setMetaData] = useState<Dictionary[]>([]);
+  const [data, setData] = useState<Dictionary[]>([]);
+  const [updateData, setUpdateData] = useState<Dictionary[]>([]);
+  const [editRow, setEditRow] = useState<Dictionary | undefined>(
+    undefined,
+  );
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<Dictionary>({
-    initialValues: {
-      key: "",
-      value: "",
-    },
-    validate: {
-      key: isNotEmpty("Please enter"),
-      value: isNotEmpty("Please enter"),
-    },
-    transformValues,
-  });
-
-  // TODO:
   const _fetch = useCallback(async () => {
-    const data = await loadDictionary();
+    setLoading(true);
+    try {
+      const _data = await loadDictionary();
+      const _mergedData = Object.keys(_data.en).map((key) => ({
+        id: uuidV4(),
+        key: key,
+        en: _data.en[key] || "",
+        ja: _data.ja[key] || "",
+      }));
 
-    setEnLanguage(
-      Object.entries(data.en).map(([key, value]) => ({
-        key,
-        value: value as string,
-      })),
-    );
-    setJaLanguage(
-      Object.entries(data.ja).map(([key, value]) => ({
-        key,
-        value: value as string,
-      })),
-    );
+      setMetaData(cloneDeep(_mergedData));
+      setData(cloneDeep(_mergedData));
+      setUpdateData(cloneDeep(_mergedData));
+    } catch (e) {
+      error("Failed to load dictionary", "Failed to load dictionary");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     _fetch();
   }, [_fetch]);
 
-  const rows = useMemo(
-    () =>
-      jaLanguage
-        .filter((item) => {
-          return filter
-            ? item.key.toUpperCase().includes(filter.toUpperCase()) ||
-                item.value
-                  .toUpperCase()
-                  .includes(filter.toUpperCase())
-            : item;
-        })
-        .map(({ key, value }) => (
-          <Table.Tr key={key}>
-            <Table.Td>{key}</Table.Td>
-            <Table.Td>{value}</Table.Td>
-          </Table.Tr>
-        )),
-    [jaLanguage, filter],
-  );
-
-  const isKeyPresent = useMemo(() => {
-    return jaLanguage.findIndex(
-      (item) => item.key === form.values.key,
-    );
-  }, [form.values.key, jaLanguage]);
-
-  const onSubmit = useCallback(
-    async (values: Dictionary) => {
-      if (isKeyPresent !== -1) {
-        jaLanguage[isKeyPresent] = values;
-        enLanguage[isKeyPresent] = values;
-      } else {
-        jaLanguage.push(values);
-        enLanguage.push({ key: values.key, value: values.key });
-      }
-      const _dictionary = {
-        en: enLanguage.reduce((acc, current) => {
-          acc[current.key] = current.value;
-          return acc;
-        }, {}),
-        ja: jaLanguage.reduce((acc, current) => {
-          acc[current.key] = current.value;
-          return acc;
-        }, {}),
-      };
-      await updateDictionary(_dictionary);
+  const onUpdateCell = useCallback(
+    (id: string, lang: "key" | "en" | "ja", newValue: string) => {
+      setUpdateData((prevData) => {
+        const indexToUpdate = prevData.findIndex(
+          (item) => item.id === id,
+        );
+        if (indexToUpdate === -1) {
+          return prevData;
+        }
+        const updatedItem = {
+          ...prevData[indexToUpdate],
+          [lang]: newValue,
+        };
+        return [
+          ...prevData.slice(0, indexToUpdate),
+          updatedItem,
+          ...prevData.slice(indexToUpdate + 1),
+        ];
+      });
     },
-    [enLanguage, isKeyPresent, jaLanguage],
+    [],
   );
+
+  const onSaveRow = useCallback(() => {
+    if (!editRow) {
+      return;
+    }
+    const { id } = editRow;
+    const updatedRow = updateData.find((item) => item.id === id);
+
+    if (!updatedRow) {
+      return;
+    }
+
+    setData((prevData) =>
+      prevData.map((item) => (item.id === id ? updatedRow : item)),
+    );
+
+    setUpdateData((prevData) =>
+      prevData.map((item) => (item.id === id ? updatedRow : item)),
+    );
+
+    setEditRow(undefined);
+  }, [editRow, updateData]);
+
+  const onCancel = useCallback(() => {
+    if (!editRow) {
+      return;
+    }
+
+    const { id, en, ja } = editRow;
+
+    if (!en && !ja) {
+      setData((prev) => prev.filter(({ id: i }) => i !== id));
+      setUpdateData((prev) => prev.filter(({ id: i }) => i !== id));
+    }
+
+    setEditRow(undefined);
+  }, [editRow]);
+
+  const onSave = useCallback(async () => {
+    if (!isEqual(metaData, data)) {
+      const _dictionary: Dictionaries = { en: {}, ja: {} };
+
+      data?.forEach(({ key, en, ja }) => {
+        if (!key) {
+          return;
+        }
+        _dictionary.en[key] = en;
+        _dictionary.ja[key] = ja;
+      });
+
+      setLoading(true); // Set loading to true
+      try {
+        await updateDictionary(_dictionary);
+        await _fetch();
+        success("Update language", "Update language successfully");
+      } catch (e) {
+        error("Update language", "Update language fail");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      warn(
+        "Update language",
+        "No changes detected, nothing to save.",
+      );
+    }
+  }, [_fetch, data, metaData]);
+
+  const addNewRow = useCallback(() => {
+    const newRow = { id: uuidV4(), key: "New key", en: "", ja: "" };
+
+    const newData = [newRow, ...updateData];
+
+    setUpdateData(newData);
+    setData(newData);
+    setEditRow(newRow);
+    setFilter("");
+  }, [updateData]);
 
   return (
     <Box>
@@ -119,49 +190,177 @@ export default function LanguageView() {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           />
-          <form onSubmit={form.onSubmit(onSubmit)}>
-            <Flex gap={10} wrap={"wrap"}>
-              <TextInput
-                label="English"
-                placeholder="English"
-                {...form.getInputProps("key")}
-              />
-              <TextInput
-                label="Japanese"
-                placeholder="Japanese"
-                {...form.getInputProps("value")}
-              />
-              <Flex direction={"column"}>
-                <span>&nbsp;</span>
-                <Button type="submit" w={110}>
-                  {isKeyPresent === -1 ? "NEW" : "UPDATE"}
-                </Button>
-              </Flex>
-            </Flex>
-          </form>
+          {!isEqual(metaData, data) && (
+            <Button
+              onClick={onSave}
+              bg={"var(--mantine-color-teal-6)"}
+            >
+              <IconCloudUp size={20} />
+              <Box ml={10}>Save</Box>
+            </Button>
+          )}
         </Flex>
-        <Space my={"md"} />
-        <Card withBorder>
-          <ScrollArea h={"76vh"}>
-            <Table>
+        <Space my={"sm"} />
+        <Card withBorder pb={0}>
+          <ScrollArea h={"74vh"}>
+            <Table className={styles.table}>
               <Table.Thead bg={"var(--mantine-color-primary-1)"}>
-                <Table.Tr>
-                  <Table.Th>English</Table.Th>
-                  <Table.Th>Japanese</Table.Th>
-                </Table.Tr>
+                <Header />
               </Table.Thead>
-              <Table.Tbody>{rows}</Table.Tbody>
+              <Table.Tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} style={{ textAlign: "center" }}>
+                      <Loader />
+                    </td>
+                  </tr>
+                ) : (
+                  <Rows
+                    data={data}
+                    filter={filter}
+                    editRow={editRow}
+                    onUpdateCell={onUpdateCell}
+                    onSaveRow={onSaveRow}
+                    onCancel={onCancel}
+                    setEditRow={setEditRow}
+                  />
+                )}
+              </Table.Tbody>
             </Table>
           </ScrollArea>
+          <Flex justify={"end"} className={styles.border}>
+            <Button onClick={addNewRow} variant="subtle">
+              Add New +
+            </Button>
+          </Flex>
         </Card>
       </Card>
     </Box>
   );
 }
 
-function transformValues(values: Dictionary) {
-  return {
-    key: values.key.toString().trim(),
-    value: values.value.toString().trim(),
-  };
+interface CellProps {
+  editMode: boolean;
+  value: string;
+  onSave: (newValue: string) => void;
+}
+
+const Cell = memo(
+  function Cell({ editMode, value, onSave }: CellProps) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleBlur = useCallback(() => {
+      if (inputRef.current && inputRef.current.value !== value) {
+        onSave(inputRef.current.value.trim());
+      }
+    }, [value, onSave]);
+
+    return editMode ? (
+      <Box>{value}</Box>
+    ) : (
+      <TextInput
+        defaultValue={value}
+        ref={inputRef}
+        onBlur={handleBlur}
+      />
+    );
+  },
+  (prevProps, nextProps) =>
+    prevProps.value === nextProps.value &&
+    prevProps.editMode === nextProps.editMode,
+);
+
+interface RowsProps {
+  data: Dictionary[];
+  filter?: string;
+  editRow?: Dictionary;
+  onUpdateCell: (
+    id: string,
+    lang: "key" | "en" | "ja",
+    newValue: string,
+  ) => void;
+  onSaveRow: () => void;
+  onCancel: () => void;
+  setEditRow: (row: Dictionary | undefined) => void;
+}
+
+const Rows = ({
+  data,
+  filter,
+  editRow,
+  onUpdateCell,
+  onSaveRow,
+  onCancel,
+  setEditRow,
+}: RowsProps) => {
+  return _filterByKeyword(data, filter).map(({ id, key, en, ja }) => (
+    <Table.Tr key={id}>
+      <Table.Td>
+        <Cell
+          editMode={editRow?.id !== id}
+          value={key}
+          onSave={(newValue) => onUpdateCell(id, "key", newValue)}
+        />
+      </Table.Td>
+      <Table.Td>
+        <Cell
+          editMode={editRow?.id !== id}
+          value={en}
+          onSave={(newValue) => {
+            onUpdateCell(id, "en", newValue);
+          }}
+        />
+      </Table.Td>
+      <Table.Td>
+        <Cell
+          editMode={editRow?.id !== id}
+          value={ja}
+          onSave={(newValue) => {
+            onUpdateCell(id, "ja", newValue);
+          }}
+        />
+      </Table.Td>
+      <Table.Td w={50}>
+        {editRow?.id === id ? (
+          <Flex gap={5}>
+            <ActionIcon onClick={onSaveRow} variant="subtle">
+              <IconCheck color="green" />
+            </ActionIcon>
+            <ActionIcon onClick={onCancel} variant="subtle">
+              <IconX color="red" />
+            </ActionIcon>
+          </Flex>
+        ) : (
+          <ActionIcon
+            onClick={() => setEditRow({ id, key, en, ja })}
+            variant="subtle"
+          >
+            <IconEdit />
+          </ActionIcon>
+        )}
+      </Table.Td>
+    </Table.Tr>
+  ));
+};
+
+const Header = () => {
+  return (
+    <Table.Tr>
+      <Table.Th>Key</Table.Th>
+      <Table.Th>English</Table.Th>
+      <Table.Th>Japanese</Table.Th>
+      <Table.Th>&nbsp;</Table.Th>
+    </Table.Tr>
+  );
+};
+
+function _filterByKeyword(data: Dictionary[], keyword?: string) {
+  return data.filter((item) => {
+    const searchStr = keyword?.toLowerCase();
+    return (
+      item.key.toLowerCase().includes(searchStr || "") ||
+      item.en.toLowerCase().includes(searchStr || "") ||
+      item.ja.toLowerCase().includes(searchStr || "")
+    );
+  });
 }

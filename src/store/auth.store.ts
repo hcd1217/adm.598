@@ -38,12 +38,10 @@ export const useAuthStore = create<IAuthStore>()(
         try {
           const data = await login(form);
           if (data.result.token) {
-            if (data.result.token) {
-              localStorage.__TOKEN__ = data.result.token;
-            } else {
-              delete localStorage.__TOKEN__;
-            }
+            localStorage.__TOKEN__ = data.result.token;
             await auth();
+          } else {
+            delete localStorage.__TOKEN__;
           }
         } catch (e) {
           if (e instanceof Error) {

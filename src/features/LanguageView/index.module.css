@@ -1,0 +1,13 @@
+.table {
+  width: 100%;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  overflow: hidden;
+}
+
+.border {
+  border-top: 2px solid var(--mantine-color-primary-3);
+}

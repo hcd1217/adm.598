@@ -127,6 +127,7 @@ export type CopyOrder = Order & {
 
 export type CopyTransaction = {
   id: string;
+  copyMaster?: string;
   createdAt: number;
   uid: string;
   remark?: string;
@@ -312,10 +313,10 @@ export type MasterTraderInformation = {
   avatar: string;
   asset: number;
   netPnL: number;
+  currentPosition?: number;
   totalPositions: number;
   invested: number;
   withdraw: number;
-  withDrawable: number;
 };
 
 export type CopyInformation = {
