@@ -68,7 +68,7 @@ export function OrderListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => { })}>
+      <form onSubmit={form.onSubmit(() => {})}>
         <Flex gap={10}>
           <TextInput
             label="UID"

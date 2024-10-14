@@ -45,12 +45,8 @@ interface IUsersStore {
   usersPendingVerification: UserPayload[];
 }
 
-const InitialState: Pick<
-// eslint-disable-next-line @typescript-eslint/indent
-  IUsersStore,
-// eslint-disable-next-line @typescript-eslint/indent
-  "loading" | "users" | "symbols" | "usersPendingVerification"
-> = {
+// prettier-ignore
+const InitialState: Pick<IUsersStore, "loading" | "users" | "symbols" | "usersPendingVerification"> = {
   loading: false,
   users: [],
   symbols: [],

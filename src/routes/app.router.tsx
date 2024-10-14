@@ -18,6 +18,7 @@ const EmailPage = lazy(() => import("@/pages/email.page"));
 const LanguagePage = lazy(() => import("@/pages/language.page"));
 const KycDataPage = lazy(() => import("@/pages/kyc-data.page"));
 const AppConfigPage = lazy(() => import("@/pages/app-config.page"));
+const ReferralPage = lazy(() => import("@/pages/referral.page"));
 
 export const AppRouter = createBrowserRouter(
   createRoutesFromChildren(
@@ -36,6 +37,7 @@ export const AppRouter = createBrowserRouter(
       <Route path="/language" Component={LanguagePage} />
       <Route path="/kyc-data" Component={KycDataPage} />
       <Route path="/app-configs" Component={AppConfigPage} />
+      <Route path="/referral" Component={ReferralPage} />
       <Route
         path={"*"}
         element={<Navigate to={"/"} replace={true} />}

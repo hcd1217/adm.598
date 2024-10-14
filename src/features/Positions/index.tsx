@@ -63,7 +63,7 @@ export function PositionsListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => { })}>
+      <form onSubmit={form.onSubmit(() => {})}>
         <Flex gap={10}>
           <Flex gap={10}>
             <TextInput

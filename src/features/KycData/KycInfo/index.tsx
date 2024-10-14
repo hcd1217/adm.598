@@ -50,8 +50,8 @@ export const kycLevelIs = memoizeOne((data: UserKycDataType) => {
   };
 });
 const dob = memoizeOne((str: string) => {
-  str = str ?? "x/y/z";
-  return str.split("/") as string[];
+  str = str ?? "-/-/-";
+  return str.split("-") as string[];
 });
 
 type PropsType = {

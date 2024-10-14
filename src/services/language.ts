@@ -3,10 +3,13 @@ import { api } from "@/utils/api";
 
 export async function loadDictionary() {
   try {
-    const res = await api.get<ApiResponse<{ dictionaries: Dictionaries }>
-    >("/internal-api/language");
-    if (res.data.result) {
-      return res.data.result.dictionaries;
+    const result = await api
+      .get("/internal-api/language")
+      .then(
+        (res) => res.data?.result as { dictionaries: Dictionaries },
+      );
+    if (result) {
+      return result.dictionaries;
     } else {
       throw new Error("Something went wrong");
     }
@@ -19,12 +22,13 @@ export async function loadDictionary() {
 
 export async function updateDictionary(params: Dictionaries) {
   try {
-    const res = await api.post<ApiResponse<{ dictionaries: Dictionaries }>>(
-      "/internal-api/language",
-      params,
-    );
-    if (res.data.result) {
-      return res.data.result.dictionaries;
+    const result = await api
+      .post("/internal-api/language", params)
+      .then(
+        (res) => res.data?.result as { dictionaries: Dictionaries },
+      );
+    if (result) {
+      return result.dictionaries;
     } else {
       throw new Error("Something went wrong");
     }

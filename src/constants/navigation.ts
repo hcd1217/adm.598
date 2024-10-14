@@ -7,6 +7,7 @@ import {
   IconMail,
   IconSettingsSpark,
   IconUsers,
+  IconUsersPlus,
   IconWorld,
 } from "@tabler/icons-react";
 import { v4 } from "uuid";
@@ -83,5 +84,12 @@ export const navigation: IAsideNavLink[] = [
     route: () => "/language",
     icon: IconWorld,
     id: "LANGUAGE",
+  },
+  {
+    group: "Main",
+    title: "Referrals",
+    route: () => "/referral",
+    icon: IconUsersPlus,
+    id: "REFERRAL",
   },
 ];
