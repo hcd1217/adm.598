@@ -15,7 +15,7 @@ export const AuthRouter = createBrowserRouter(
     <Route path="/" Component={Outlet} ErrorBoundary={ErrorPage}>
       <Route
         index
-        element={<Navigate to={"/login"} replace={true} />}
+        element={<Navigate to={"/auth/login"} replace={true} />}
       />
       <Route path={"auth"} Component={AuthLayout}>
         <Route path={"login"} Component={LoginPage} />
@@ -23,7 +23,7 @@ export const AuthRouter = createBrowserRouter(
 
       <Route
         path={"*"}
-        element={<Navigate to={"/login"} replace={true} />}
+        element={<Navigate to={"/auth/login"} replace={true} />}
       />
     </Route>,
   ),

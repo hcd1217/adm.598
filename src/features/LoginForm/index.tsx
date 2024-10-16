@@ -31,7 +31,7 @@ export default function LoginForm() {
           </Group>
         </Card.Section>
 
-        <Card.Section inheritPadding px={32}>
+        <Card.Section inheritPadding px={32} pb={32}>
           <Stack gap={36}>
             <Stack gap={36} w={372}>
               <TextInput
@@ -55,14 +55,6 @@ export default function LoginForm() {
               />
             </Stack>
 
-            <Group justify="flex-end">
-              <Text size={"13px"} lh={"21px"} fw={"400"}>
-                {/* <Text span component={Link} to="/auth/forgot-password" c="accent.4">
-                                    Forgot your password?
-                                </Text> */}
-              </Text>
-            </Group>
-
             <Stack>
               <Button
                 type="submit"
@@ -76,17 +68,6 @@ export default function LoginForm() {
               </Button>
             </Stack>
           </Stack>
-        </Card.Section>
-
-        <Card.Section inheritPadding pb={16} pt={16} px={32}>
-          {/* <Group py={16} align="center" justify="center">
-                        <Text size={'13px'} lh={'21px'} c={'gray.6'} fw={'500'}>
-                            Don't have an account?{' '}
-                            <Text span component={Link} to="/auth/register" size={'13px'} lh={'21px'} c="accent.4" fw={'500'}>
-                                Sign Up
-                            </Text>
-                        </Text>
-                    </Group> */}
         </Card.Section>
       </Card>
     </form>
