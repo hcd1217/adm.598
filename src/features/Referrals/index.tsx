@@ -1,13 +1,13 @@
+import { ONE_DAY } from "@/common/constants";
 import { formatCurrency } from "@/common/format";
+import { beginOfMonth } from "@/common/utils";
 import { useRecords } from "@/hooks/useRecords";
 import { getAllReferrals } from "@/services/agent";
+import { Referral } from "@/types/referral";
 import { Box, Button, Card, Flex, Space, Title } from "@mantine/core";
+import { MonthPickerInput } from "@mantine/dates";
 import { IconRefresh } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
-import { MonthPickerInput } from "@mantine/dates";
-import { Referral } from "@/types/referral";
-import { currentOfMonth } from "@/common/utils";
-import { ONE_DAY } from "@/common/constants";
 
 const ReferralView = () => {
   const {
@@ -23,7 +23,7 @@ const ReferralView = () => {
     "/internal-api/referrals",
     getAllReferrals,
     {
-      timestamp: new Date(currentOfMonth(Date.now() - 30 * ONE_DAY)),
+      timestamp: new Date(beginOfMonth(Date.now() - 30 * ONE_DAY)),
     },
   );
 
