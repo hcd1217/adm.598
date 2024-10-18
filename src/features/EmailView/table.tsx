@@ -1,6 +1,6 @@
 import { useRecords } from "@/hooks/useRecords";
 import { getEmailsApi } from "@/services/email";
-import { EmailPayload } from "@/types/email";
+import { Email } from "@/types/email";
 import {
   ActionIcon,
   Avatar,
@@ -17,15 +17,15 @@ import { useState } from "react";
 import styles from "./styles.module.css";
 
 export default function MailContainer() {
-  // TODO: fix type
   const { items, disabledNext, loadNext, disabledPrev, loadPrev } =
-    useRecords<undefined, EmailPayload>(
+    useRecords<unknown, Email>(
       "/internal-api/get-emails",
       getEmailsApi,
-      undefined,
+      {},
     );
-  const [selectedMail, setSelectedMail] =
-    useState<EmailPayload>(undefined);
+  const [selectedMail, setSelectedMail] = useState<Email | undefined>(
+    undefined,
+  );
   return (
     <Flex align="flex" h={"96vh"} gap={20}>
       <Paper

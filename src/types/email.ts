@@ -1,4 +1,4 @@
-export type EmailPayload = {
+export type Email = {
   id: string;
   subject: string;
   to: string;

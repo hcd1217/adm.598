@@ -1,6 +1,6 @@
 import logger from "@/helpers/logger";
 import { PAGE_SIZE } from "@/types/common";
-import { EmailPayload } from "@/types/email";
+import { Email } from "@/types/email";
 import { api } from "@/utils/api";
 
 export async function getEmailsApi(
@@ -12,7 +12,7 @@ export async function getEmailsApi(
   if (cursor !== null) {
     formData["cursor"] = cursor;
   }
-  const response = await api.post<ApiResponse<EmailPayload[]>>(
+  const response = await api.post<ApiResponse<Email[]>>(
     "/internal-api/get-emails",
     { ...formData, limit },
   );

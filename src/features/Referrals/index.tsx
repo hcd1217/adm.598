@@ -4,6 +4,10 @@ import { getAllReferrals } from "@/services/agent";
 import { Box, Button, Card, Flex, Space, Title } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
+import { MonthPickerInput } from "@mantine/dates";
+import { Referral } from "@/types/referral";
+import { currentOfMonth } from "@/common/utils";
+import { ONE_DAY } from "@/common/constants";
 
 const ReferralView = () => {
   const {
@@ -14,7 +18,14 @@ const ReferralView = () => {
     setPage,
     PAGE_SIZE,
     page,
-  } = useRecords("/internal-api/referrals", getAllReferrals, {});
+    form,
+  } = useRecords<{ timestamp: Date | null }, Referral>(
+    "/internal-api/referrals",
+    getAllReferrals,
+    {
+      timestamp: new Date(currentOfMonth(Date.now() - 30 * ONE_DAY)),
+    },
+  );
 
   return (
     <Box>
@@ -32,6 +43,15 @@ const ReferralView = () => {
         </Flex>
       </Card>
 
+      <form onSubmit={form.onSubmit(() => {})}>
+        <MonthPickerInput
+          w={"16rem"}
+          label="Filter by month/year"
+          key={form.key("timestamp")}
+          {...form.getInputProps("timestamp")}
+        />
+      </form>
+
       <Space my={"md"} />
       <DataTable
         height={"75vh"}
@@ -43,6 +63,7 @@ const ReferralView = () => {
         recordsPerPage={PAGE_SIZE}
         page={page}
         onPageChange={(p) => setPage(p)}
+        idAccessor={"contact"}
         columns={[
           {
             accessor: "contact",
