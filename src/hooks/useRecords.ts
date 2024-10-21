@@ -40,12 +40,13 @@ export function useRecords<T, P>(
       }
     },
   });
+
   const { getUserByUId } = useInfoStore();
 
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(query, 200);
-  const { data, isLoading } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     [key, cursor, form.getValues()],
     ([, cursor, params]) => {
       logger.debug("PARAMS", params);
@@ -81,13 +82,13 @@ export function useRecords<T, P>(
   const loadPrev = () => {
     if (!isLoading) {
       setCursor(prevCurs[prevCurs.length - 1]);
-      setPrevCurs((v) => {
-        return v.slice(0, v.length - 1);
-      });
+      setPrevCurs((v) => v.slice(0, v.length - 1));
     }
   };
 
-  const loadRecords = useCallback(() => {}, []);
+  const loadRecords = useCallback(() => {
+    mutate();
+  }, [mutate]);
 
   const refresh = () => {
     form.setValues(initialValues);

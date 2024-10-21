@@ -20,7 +20,7 @@ const EmailView = () => {
         radius={999}
         ta="center"
       >
-        {!opened ? <IconPlus size={"2xl"} /> : <IconX />}
+        {!opened ? <IconPlus /> : <IconX />}
       </Button>
       <Modal
         opened={opened}

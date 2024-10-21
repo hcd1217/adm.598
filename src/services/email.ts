@@ -24,3 +24,13 @@ export async function getEmailsApi(
   }
   return Promise.reject(null);
 }
+
+export async function deleteEmail(id: string) {
+  const res = await api.delete("/internal-api/email", {
+    data: { id },
+  });
+  if (res.data?.result) {
+    return res.data;
+  }
+  return Promise.reject(null);
+}
