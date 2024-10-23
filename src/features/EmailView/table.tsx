@@ -6,7 +6,6 @@ import {
   Anchor,
   Avatar,
   Box,
-  Checkbox,
   Flex,
   Group,
   Paper,
@@ -38,28 +37,16 @@ export default function MailContainer() {
   const [selectedMail, setSelectedMail] = useState<Email | undefined>(
     undefined,
   );
-  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(
-    new Set(),
-  );
 
-  const handleSelect = (id: string) => {
-    setSelectedEmails((prev) => {
-      const newSelection = new Set(prev);
-      if (newSelection.has(id)) {
-        newSelection.delete(id);
-      } else {
-        newSelection.add(id);
+  const _deleteEmail = useCallback(
+    async (id: string) => {
+      if (id === selectedMail?.id) {
+        setSelectedMail(undefined);
       }
-      return newSelection;
-    });
-  };
-
-  const handleDeleteSelected = useCallback(async () => {
-    await Promise.all(
-      Array.from(selectedEmails).map((id) => deleteEmail(id)),
-    );
-    setSelectedEmails(new Set());
-  }, [selectedEmails]);
+      await deleteEmail(id).then(reload);
+    },
+    [reload, selectedMail?.id],
+  );
 
   return (
     <Flex align="flex" h={"96vh"} gap={20}>
@@ -69,17 +56,7 @@ export default function MailContainer() {
         style={{ borderRadius: "8px", width: 400 }}
         h={"96%"}
       >
-        <Flex justify={"end"} pt="sm" pr="sm">
-          <Anchor
-            onClick={() =>
-              handleDeleteSelected().then(() => reload())
-            }
-            className={styles.btn_icon}
-          >
-            <IconTrash color="red" stroke={1.5} size={20} />
-          </Anchor>
-        </Flex>
-        <ScrollArea h={"94%"} p="md" pt={0}>
+        <ScrollArea h={"100%"} p="md" pt={0}>
           <Stack gap="xs">
             {items.map((mail) => (
               <Paper
@@ -95,33 +72,23 @@ export default function MailContainer() {
                 }
                 onClick={() => setSelectedMail(mail)}
               >
-                <EmailItem
-                  {...mail}
-                  isSelected={selectedEmails.has(mail.id)}
-                  onSelect={() => handleSelect(mail.id)}
-                />
+                <EmailItem {...mail} onDelete={_deleteEmail} />
               </Paper>
             ))}
           </Stack>
         </ScrollArea>
 
         <Flex py={"xs"} justify={"center"} gap={10}>
-          <ActionIcon
-            onClick={() => loadPrev()}
-            disabled={disabledPrev}
-          >
+          <ActionIcon onClick={loadPrev} disabled={disabledPrev}>
             <IconArrowLeft />
           </ActionIcon>
-          <ActionIcon
-            onClick={() => loadNext()}
-            disabled={disabledNext}
-          >
+          <ActionIcon onClick={loadNext} disabled={disabledNext}>
             <IconArrowRight />
           </ActionIcon>
         </Flex>
       </Paper>
 
-      {selectedMail && (
+      {selectedMail?.id && (
         <Paper
           withBorder
           p="md"
@@ -144,19 +111,16 @@ function EmailItem({
   to,
   sendAt,
   subject,
-  isSelected,
-  onSelect,
+  onDelete,
 }: {
   id: string;
   to: string;
   sendAt: number;
   subject: string;
-  isSelected: boolean;
-  onSelect: (id: string) => void;
+  onDelete: (id: string) => Promise<void>;
 }) {
   return (
     <Flex align={"center"} gap={16} w={"100%"}>
-      <Checkbox checked={isSelected} onChange={() => onSelect(id)} />
       <Box w={"100%"}>
         <Flex justify={"end"}>
           <Text size="xs" c="dimmed">
@@ -175,6 +139,14 @@ function EmailItem({
           </Text>
         </Group>
       </Box>
+      <Flex justify={"end"} pt="sm" pr="sm">
+        <Anchor
+          onClick={() => onDelete(id)}
+          className={styles.btn_icon}
+        >
+          <IconTrash color="red" stroke={1.5} size={20} />
+        </Anchor>
+      </Flex>
     </Flex>
   );
 }
