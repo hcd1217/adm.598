@@ -180,6 +180,7 @@ export const copyMasterPerformanceSchema = z.object({
 export const authenticationPayloadSchema = z.object({
   id: stringSchema,
   uid: stringSchema,
+  isDemo: optionalBooleanSchema,
   isAdmin: optionalBooleanSchema,
   isAgent: optionalBooleanSchema,
   nickName: optionalStringSchema,
@@ -191,14 +192,10 @@ export const authenticationPayloadSchema = z.object({
   mobileVerified: booleanSchema,
   hasMfa: booleanSchema,
   hasAntiPhishingCode: booleanSchema,
+  role: stringSchema,
   kycLevel: numberSchema.int().positive().min(0).max(4),
   isPendingVerification: optionalBooleanSchema,
   isRejectedVerification: optionalBooleanSchema,
-  // kycData: userKycDataSchema
-  //   .omit({
-  //     images: true,
-  //   })
-  //   .optional(),
   kycData: userKycDataSchema.optional(),
   email: optionalStringSchema,
   mobile: optionalStringSchema,

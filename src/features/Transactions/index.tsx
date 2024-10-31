@@ -1,4 +1,5 @@
 import { TransactionStatus, TransactionType } from "@/common/enums";
+import { getExplorerUrl } from "@/common/transaction";
 import {
   AccountName,
   AccountTypeName,
@@ -13,6 +14,7 @@ import {
 } from "@/utils/color";
 import {
   ActionIcon,
+  Anchor,
   Box,
   Button,
   Card,
@@ -204,7 +206,25 @@ export function TransactionsListFilter() {
               {
                 accessor: "txId",
                 sortable: false,
-                render: ({ txId }) => txId,
+                render: ({ txId }) => {
+                  const _txId = getExplorerUrl(txId)?.value;
+                  return (
+                    <Text>
+                      {_txId ? (
+                        <Anchor
+                          href={_txId}
+                          target="_blank"
+                          underline="never"
+                          c={"var(--mantine-color-anchor)"}
+                        >
+                          {txId}
+                        </Anchor>
+                      ) : (
+                        <>{txId}</>
+                      )}
+                    </Text>
+                  );
+                },
                 resizable: true,
               },
               {
