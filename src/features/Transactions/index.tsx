@@ -127,6 +127,25 @@ export function TransactionsListFilter() {
             height={"100%"}
             columns={[
               {
+                accessor: "createdAt",
+                sortable: false,
+                render: ({ createdAt }) => (
+                  <>
+                    <Text
+                      styles={{
+                        root: {
+                          whiteSpace: "nowrap",
+                        },
+                      }}
+                      fz={14}
+                    >
+                      {new Date(createdAt).toLocaleString()}
+                    </Text>
+                  </>
+                ),
+                resizable: true,
+              },
+              {
                 accessor: "userId",
                 sortable: false,
                 render: ({ userId }) => (
@@ -239,26 +258,6 @@ export function TransactionsListFilter() {
                 render: ({ toAccountId }) => toAccountId,
                 resizable: true,
               },
-              {
-                accessor: "createdAt",
-                sortable: false,
-                render: ({ createdAt }) => (
-                  <>
-                    <Text
-                      styles={{
-                        root: {
-                          whiteSpace: "nowrap",
-                        },
-                      }}
-                      fz={14}
-                    >
-                      {new Date(createdAt).toLocaleString()}
-                    </Text>
-                  </>
-                ),
-                resizable: true,
-              },
-
               {
                 accessor: "toAmount",
                 sortable: false,
