@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/common/format";
 import { useRecords } from "@/hooks/useRecords";
 import { getUserListApi } from "@/services/auth";
 import { UserPayload } from "@/types/record";
@@ -123,6 +124,16 @@ export function UserListFilter() {
           {
             accessor: "fullName",
             render: ({ fullName }) => <>{fullName}</>,
+          },
+          {
+            accessor: "balance",
+            title: "Balances",
+            render: ({ balance }) => {
+              const value = formatCurrency(
+                parseFloat(balance ?? "0"),
+              );
+              return <>{value === "0" || value === "$0.00" ? "-" : value}</>;
+            },
           },
           {
             accessor: "isDemo",
