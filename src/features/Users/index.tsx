@@ -1,6 +1,6 @@
 import { formatCurrency } from "@/common/format";
 import { useRecords } from "@/hooks/useRecords";
-import { getUserListApi } from "@/services/auth";
+import { useInfoStore } from "@/store/info.store";
 import { UserPayload } from "@/types/record";
 import { fuzzySearchMultipleWords } from "@/utils/data";
 import {
@@ -28,15 +28,20 @@ export function UserListFilter() {
   const {
     items: _t,
     form,
-    data,
     refresh,
-    isLoading,
     setPage,
     PAGE_SIZE,
     page,
   } = useRecords<RecordFilterType, UserPayload>(
     "/internal-api/get-all-users",
-    getUserListApi,
+    async () => {
+      return {
+        data: [],
+        result: [],
+        statusCode: 200,
+        success: true,
+      };
+    },
     {
       depositCode: "",
       email: "",
@@ -45,20 +50,23 @@ export function UserListFilter() {
     },
   );
 
+  const users = useInfoStore((state) => state.users);
+  const isLoading = useInfoStore((state) => state.loading);
+
   const items = useMemo(() => {
-    let _items = [...(data?.result ?? [])];
+    let _items = [...(users ?? [])];
     const _values = form.getValues();
     _items = fuzzySearchMultipleWords(
-      data?.result ?? [],
+      users ?? [],
       keys(_values),
       values(_values) as string[],
     ) as typeof _t;
 
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE;
-    const t = _items.slice(from, to);
-    return t;
-  }, [data?.result, page, form, PAGE_SIZE]);
+    const results = _items.slice(from, to);
+    return { results, items: _items };
+  }, [page, form, PAGE_SIZE, users]);
 
   return (
     <Box>
@@ -75,7 +83,7 @@ export function UserListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Flex gap={10} wrap={"wrap"}>
           <TextInput
             label="UID"
@@ -95,13 +103,14 @@ export function UserListFilter() {
         </Flex>
       </form>
       <Space my={"md"} />
+
       <DataTable
         height={"75vh"}
         withTableBorder
         withColumnBorders
-        records={items}
+        records={items.results}
         fetching={isLoading}
-        totalRecords={data?.result.length}
+        totalRecords={items.items.length}
         recordsPerPage={PAGE_SIZE}
         page={page}
         onPageChange={(p) => setPage(p)}

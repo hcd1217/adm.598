@@ -3,11 +3,14 @@ import { useInfoStore } from "@/store/info.store";
 import { PAGE_SIZE } from "@/types/common";
 import { useForm } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
+import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
 
 type FormQuery<T> = T & { userId?: string };
 type ResponseType<T> = T & { id: string };
+
+const excludesKey = ["/internal-api/get-all-users"];
 
 export function useRecords<T, P>(
   key: string,
@@ -24,21 +27,22 @@ export function useRecords<T, P>(
   const [prevCursor, setPrevCursor] = useState(null);
   const [cursor, setCursor] = useState<string | null>(null);
   const [prevCurs, setPrevCurs] = useState<string[]>([]);
+  const fn = () => {
+    setQuery(Date.now().toString());
+    if (excludesKey.includes(key)) {
+      // todo: offline
+      setPage(1);
+    } else {
+      setNextCursor(null);
+      setPrevCursor(null);
+      setCursor(null);
+      setPrevCurs([]);
+    }
+  };
 
   const form = useForm<FormQuery<T>>({
     mode: "uncontrolled",
-    onValuesChange() {
-      setQuery(Date.now().toString());
-      if (["/internal-api/get-all-users"].includes(key)) {
-        // todo: offline
-        setPage(1);
-      } else {
-        setNextCursor(null);
-        setPrevCursor(null);
-        setCursor(null);
-        setPrevCurs([]);
-      }
-    },
+    onValuesChange: debounce(fn, 800),
   });
 
   const { getUserByUId } = useInfoStore();
