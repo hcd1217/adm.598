@@ -108,22 +108,25 @@ export function UserListFilter() {
         columns={[
           {
             accessor: "email",
-            render: ({ email }) => email,
+            render: ({ email, fullName }) => (
+              <div>
+                {email}
+                <br />
+                {fullName || "-"}
+              </div>
+            ),
             sortable: false,
           },
           {
             accessor: "depositCode",
+            title: "Code",
             sortable: false,
             render: ({ depositCode }) => depositCode,
           },
           {
-            accessor: "mobile",
-            render: ({ mobile }) => mobile,
+            accessor: "kycLevel",
+            title: "KYC Level",
             sortable: false,
-          },
-          {
-            accessor: "fullName",
-            render: ({ fullName }) => <>{fullName}</>,
           },
           {
             accessor: "balance",
@@ -132,7 +135,11 @@ export function UserListFilter() {
               const value = formatCurrency(
                 parseFloat(balance ?? "0"),
               );
-              return <>{value === "0" || value === "$0.00" ? "-" : value}</>;
+              return (
+                <>
+                  {value === "0" || value === "$0.00" ? "-" : value}
+                </>
+              );
             },
           },
           {

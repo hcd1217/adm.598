@@ -1,4 +1,4 @@
-import { Account, SPENumber } from "@/common/types";
+import { Account } from "@/common/types";
 import { UserKycDataType } from "./common";
 
 type TRANSACTION_TYPE =
