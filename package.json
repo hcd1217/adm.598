@@ -8,6 +8,7 @@
     "dev": "vite",
     "static:check": "eslint src && prettier --check src",
     "static:fix": "eslint src --fix && prettier --write src",
+    "type-check": "tsc --noEmit -p ./tsconfig.json",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -26,7 +27,7 @@
     "@mantine/nprogress": "^7.4.0",
     "@mantine/spotlight": "^7.4.0",
     "@mantine/tiptap": "^7.12.2",
-    "@tabler/icons-react": "^3.12.0",
+    "@tabler/icons-react": "3.18.0",
     "@tiptap/extension-highlight": "^2.5.9",
     "@tiptap/extension-link": "^2.5.9",
     "@tiptap/extension-subscript": "^2.5.9",

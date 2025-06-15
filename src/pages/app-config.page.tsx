@@ -1,4 +1,5 @@
 import BN from "@/common/big-number";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { AppConfig, SPENumber } from "@/common/types";
 import {
   getAppConfigs,
@@ -7,8 +8,6 @@ import {
 import { success } from "@/utils/notifications";
 import { failed } from "@/utils/toast";
 import {
-  Anchor,
-  Breadcrumbs,
   Button,
   Container,
   Flex,
@@ -16,7 +15,6 @@ import {
   Space,
   Table,
 } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
 import { cloneDeep, isEqual } from "lodash";
 import { useEffect, useState } from "react";
 export default function Page() {
@@ -32,16 +30,7 @@ export default function Page() {
   }, []);
   return (
     <Container fluid>
-      <Breadcrumbs
-        separator={<IconChevronRight color="gray" size={14} />}
-      >
-        <Anchor fz={14} fw={400} href="/">
-          Dashboard
-        </Anchor>
-        <Anchor fz={14} fw={400} c={"primary"}>
-          APP Configs
-        </Anchor>
-      </Breadcrumbs>
+      <Breadcrumbs title="APP Configs" />
       <Space my={"md"} />
       <Flex w="100%" justify="end" my="10px">
         <Button

@@ -6,6 +6,6 @@ interface IAsideNavLink {
   route: (user: IUser | null, params: Params) => string;
   exact?: boolean;
   coming?: boolean;
-  badge?: string;
+  badge?: string | number;
   id: string;
 }

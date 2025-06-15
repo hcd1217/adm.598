@@ -1,26 +1,11 @@
 import { TransactionsListFilter } from "@/features/Transactions";
-import {
-  Anchor,
-  Box,
-  Breadcrumbs,
-  Container,
-  Space,
-} from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { Box, Space, Container } from "@mantine/core";
 
 export default function Transactions() {
   return (
     <Container fluid>
-      <Breadcrumbs
-        separator={<IconChevronRight color="gray" size={14} />}
-      >
-        <Anchor fz={14} fw={400} href="/">
-          Dashboard
-        </Anchor>
-        <Anchor fz={14} fw={400} c={"primary"}>
-          Transactions
-        </Anchor>
-      </Breadcrumbs>
+      <Breadcrumbs title="Transactions" />
       <Space my={"md"} />
       <Box style={{ overflow: "hidden" }}>
         <TransactionsListFilter />

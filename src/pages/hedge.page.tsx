@@ -1,13 +1,13 @@
+import HedgeView from "@/features/Hedge";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import ReferralView from "@/features/Referrals";
 import { Space, Container } from "@mantine/core";
 
 export default function Referral() {
   return (
     <Container fluid>
-      <Breadcrumbs title="Referrals" />
+      <Breadcrumbs title="Hedge" />
       <Space my={"md"} />
-      <ReferralView />
+      <HedgeView />
     </Container>
   );
 }

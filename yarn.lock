@@ -794,17 +794,17 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@tabler/icons-react@^3.12.0":
-  version "3.19.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-3.19.0.tgz#9b5a421bf69875677fde52e7de73b4e6b5571e57"
-  integrity sha512-AqEWGI0tQWgqo6ZjMO5yJ9sYT8oXLuAM/up0hN9iENS6IdtNZryKrkNSiMgpwweNTpl8wFFG/dAZ959S91A/uQ==
+"@tabler/icons-react@3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-3.18.0.tgz#fdc2423900321f4864ade19112abd2dd4b825755"
+  integrity sha512-2gGMWJe67T7q6Sgb+4r/OsAjbq6hH30D6D2l02kOnl9kAauSsp/u6Gx1zteQ/GiwqRYSTEIhYMOhOV4LLa8rAw==
   dependencies:
-    "@tabler/icons" "3.19.0"
+    "@tabler/icons" "3.18.0"
 
-"@tabler/icons@3.19.0":
-  version "3.19.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.19.0.tgz#5998b0557ef34572e003f2d75ac95e7c04f88c81"
-  integrity sha512-A4WEWqpdbTfnpFEtwXqwAe9qf9sp1yRPvzppqAuwcoF0q5YInqB+JkJtSFToCyBpPVeLxJUxxkapLvt2qQgnag==
+"@tabler/icons@3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.18.0.tgz#9531d3ec7541facd584a22fb695bd65b896484a0"
+  integrity sha512-zLuwTs/xjQSsGh1X5Pt6qytvM8r6lFpWo5aAiDgnX2ekrOshNs4d87PcJEkP3555gaKy0ZftgckxPzedrN00fQ==
 
 "@tiptap/core@^2.8.0":
   version "2.8.0"

@@ -19,6 +19,7 @@ const LanguagePage = lazy(() => import("@/pages/language.page"));
 const KycDataPage = lazy(() => import("@/pages/kyc-data.page"));
 const AppConfigPage = lazy(() => import("@/pages/app-config.page"));
 const ReferralPage = lazy(() => import("@/pages/referral.page"));
+const HedgePage = lazy(() => import("@/pages/hedge.page"));
 
 export const AppRouter = createBrowserRouter(
   createRoutesFromChildren(
@@ -28,6 +29,7 @@ export const AppRouter = createBrowserRouter(
       ErrorBoundary={ErrorPage.withLayout(AppLayout)}
     >
       <Route index Component={RootPage} />
+      <Route path="/hedge" Component={HedgePage} />
       <Route path="/users" Component={UsersPage} />
       <Route path="/orders" Component={OrdersPage} />
       <Route path="/positions" Component={PositionsPage} />

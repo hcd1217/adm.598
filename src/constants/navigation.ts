@@ -1,4 +1,5 @@
 import {
+  IconAlertHexagon,
   // cspell:disable-next-line
   IconBusinessplan as IconBusinessPlan,
   IconFloatLeft,
@@ -19,6 +20,14 @@ export const navigation: IAsideNavLink[] = [
     access: () => true,
     route: () => "/",
     icon: IconGauge,
+    id: v4(),
+  },
+  {
+    group: "Main",
+    title: "Hedge Data",
+    access: () => true,
+    route: () => "/hedge",
+    icon: IconAlertHexagon,
     id: v4(),
   },
   {

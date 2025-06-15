@@ -83,7 +83,7 @@ export function UserListFilter() {
           </Button>
         </Flex>
       </Card>
-      <form onSubmit={form.onSubmit(() => { })}>
+      <form onSubmit={form.onSubmit(() => {})}>
         <Flex gap={10} wrap={"wrap"}>
           <TextInput
             label="UID"
