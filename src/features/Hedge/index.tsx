@@ -39,6 +39,7 @@ const HedgeView = () => {
     {
       assets: [],
       positions: [],
+      spots: [],
     },
   );
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -62,7 +63,7 @@ const HedgeView = () => {
     fetchData();
     const timer = setInterval(() => {
       fetchData();
-    }, 3000);
+    }, 30000);
     return () => clearInterval(timer);
   }, []);
   if (summary.assets.length === 0) {
@@ -76,7 +77,7 @@ const HedgeView = () => {
         <Flex justify={"space-between"}>
           <Title order={3}>Hedge data</Title>
           <Button
-            onClick={() => {}}
+            onClick={() => { }}
             title="Refresh"
             disabled={false}
             loading={false}
@@ -132,18 +133,24 @@ const HedgeView = () => {
         <Space my={"xl"} />
 
         <Tabs.Panel value="summary">
-          <Title order={4}>Assets</Title>
-          <Space my={"sm"} />
-          <AssetDataTable assets={summary.assets} />
-          <Space my={"xl"} />
-          <Title order={4}>Futures Positions</Title>
-          <Space my={"sm"} />
-          <PositionDataTable positions={summary.positions} />
+          <ScrollArea h={"65vh"} pr={"md"}>
+            <Title order={4}>Assets</Title>
+            <Space my={"sm"} />
+            <AssetDataTable assets={summary.assets} />
+            <Space my={"xl"} />
+            <Title order={4}>Futures Positions</Title>
+            <Space my={"sm"} />
+            <PositionDataTable positions={summary.positions} />
+            <Space my={"xl"} />
+            <Title order={4}>Spot Positions</Title>
+            <Space my={"sm"} />
+            <AssetDataTable assets={summary.spots} />
+          </ScrollArea>
         </Tabs.Panel>
 
         <Tabs.Panel value="asset">
           <Space my={"sm"} />
-          <ScrollArea h={"65vh"}>
+          <ScrollArea h={"65vh"} pr={"md"}>
             <AssetDataTable assets={assets} />
           </ScrollArea>
         </Tabs.Panel>

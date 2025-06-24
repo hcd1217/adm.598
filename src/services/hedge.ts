@@ -69,7 +69,9 @@ type ApiResponseData = {
     SOL: number;
     AVX: number;
   };
-  cciUsers: ApiResponseHedgeDetail;
+  cciUsers: ApiResponseHedgeDetail & {
+    USDT_COPIED: number;
+  };
   hedgeAccounts: Record<string, ApiResponseHedgeDetail>;
 };
 
@@ -112,6 +114,15 @@ export type HedgeAccountData = {
       avax: number;
       bold?: boolean;
     }[];
+    spots: {
+      id: string;
+      name: string;
+      usdt: number;
+      btc: number;
+      eth: number;
+      sol: number;
+      avax: number;
+    }[];
   };
   positions: {
     id: string;
@@ -134,7 +145,11 @@ export type HedgeAccountData = {
     };
   }[];
   assets: {
+    isUserAsset?: boolean;
     totalFlag?: boolean;
+    isSpot?: boolean;
+    isInUSD?: boolean;
+    isUSD?: boolean;
     id: string;
     name: string;
     total?: number;
@@ -181,6 +196,7 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
   const assets: HedgeAccountData["assets"] = [
     {
       id: uuidV4(),
+      isUserAsset: true,
       name: "CCI User (Include KOL) TOTAL ASSETS",
       usdt: cciUsers.USDT,
       btc: cciUsers.BTC,
@@ -190,6 +206,7 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
     },
     {
       name: "CCI User (Include KOL) TOTAL ASSETS (In USD)",
+      isUserAsset: true,
       id: uuidV4(),
       total: cciUsers.total,
       usdt: cciUsers.USDT * 1,
@@ -201,6 +218,8 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
     {
       id: uuidV4(),
       name: "COBO ASSETS",
+      totalFlag: false,
+      isInUSD: false,
       usdt: cobo.USDT,
       btc: cobo.BTC,
       eth: cobo.ETH,
@@ -211,6 +230,7 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
       id: uuidV4(),
       name: "COBO ASSETS (In USD)",
       totalFlag: true,
+      isInUSD: true,
       total: cobo.total,
       usdt: cobo.USDT * 1,
       btc: cobo.BTC * prices.BTC,
@@ -283,29 +303,72 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
     sol: 0,
     avax: 0,
   };
-  assets.forEach((asset) => {
-    if (!asset.totalFlag) {
+
+  const spotAsset = {
+    id: uuidV4(),
+    name: "Total Hedge Accounts Spot Assets",
+    total: 0,
+    usdt: 0,
+    btc: 0,
+    eth: 0,
+    sol: 0,
+    avax: 0,
+  };
+
+  assets.filter((asset) => asset.isSpot).forEach((asset) => {
+    if (asset.isUserAsset) {
       return;
     }
-    totalAsset.total += asset.total || 0;
-    totalAsset.usdt += asset.usdt || 0;
-    totalAsset.btc += asset.btc || 0;
-    totalAsset.eth += asset.eth || 0;
-    totalAsset.sol += asset.sol || 0;
-    totalAsset.avax += asset.avax || 0;
+    if (asset.isInUSD) {
+      spotAsset.total += asset.total || 0;
+      spotAsset.usdt += asset.usdt || 0;
+    } else {
+      spotAsset.btc += asset.btc || 0;
+      spotAsset.eth += asset.eth || 0;
+      spotAsset.sol += asset.sol || 0;
+      spotAsset.avax += asset.avax || 0;
+    }
+  });
 
-    // eslint-disable-next-line no-console
-    console.log(
-      asset.name,
-      Math.floor(asset.total || 0).toLocaleString(),
-      Math.floor(totalAsset.total).toLocaleString(),
-    );
+  assets.forEach((asset) => {
+    if (asset.isUserAsset) {
+      return;
+    }
+    if (asset.totalFlag) {
+      totalAsset.total += asset.total || 0;
+      totalAsset.usdt += asset.usdt || 0;
+    }
+    if (!asset.isInUSD && !asset.totalFlag) {
+      totalAsset.btc += asset.btc || 0;
+      // eslint-disable-next-line no-console
+      console.log(
+        111, asset.name,
+        Math.floor(asset.btc),
+        Math.floor(totalAsset.btc),
+      );
+      totalAsset.eth += asset.eth || 0;
+      totalAsset.sol += asset.sol || 0;
+      totalAsset.avax += asset.avax || 0;
+    }
   });
   // eslint-disable-next-line no-console
-  console.log("================================");
-  assets.push(totalAsset);
+  // console.log("================================");
+  // assets.push(totalAsset);
 
   const summary: HedgeAccountData["summary"] = {
+    spots: [
+      spotAsset,
+      {
+        id: uuidV4(),
+        name: "CCI User's Spot Assets",
+        total: cciUsers.total - cciUsers.USDT + cciUsers.USDT_COPIED,
+        usdt: cciUsers.USDT_COPIED || 0,
+        btc: cciUsers.BTC,
+        eth: cciUsers.ETH,
+        sol: cciUsers.SOL,
+        avax: cciUsers.AVAX,
+      },
+    ],
     positions: [
       {
         id: "1",
@@ -455,6 +518,9 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
         {
           id: uuidV4(),
           name: `${name} Spot`,
+          isSpot: true,
+          isInUSD: false,
+          totalFlag: false,
           usdt: accountSpotAssets?.USDT || 0,
           btc: accountSpotAssets?.BTC || 0,
           eth: accountSpotAssets?.ETH || 0,
@@ -465,6 +531,9 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
           id: uuidV4(),
           name: `${name} Spot (In USD)`,
           total: 0,
+          isSpot: true,
+          isInUSD: true,
+          totalFlag: true,
           usdt: (accountSpotAssets?.USDT || 0) * 1,
           btc: (accountSpotAssets?.BTC || 0) * prices.BTC,
           eth: (accountSpotAssets?.ETH || 0) * prices.ETH,
@@ -474,6 +543,9 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
         {
           id: uuidV4(),
           name: `${name} Coin(M)`,
+          isSpot: false,
+          isInUSD: false,
+          totalFlag: false,
           usdt: 0,
           btc: accountCoinMAssets?.BTC || 0,
           eth: accountCoinMAssets?.ETH || 0,
@@ -485,6 +557,9 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
           name: `${name} Coin(M) (In USD)`,
           total: 0,
           usdt: 0,
+          isSpot: false,
+          isInUSD: true,
+          totalFlag: true,
           btc: (accountCoinMAssets?.BTC || 0) * prices.BTC,
           eth: (accountCoinMAssets?.ETH || 0) * prices.ETH,
           sol: (accountCoinMAssets?.SOL || 0) * prices.SOL,
@@ -494,6 +569,9 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
           id: uuidV4(),
           name: `${name} USD(S)`,
           usdt: accountUsdsMAssets?.USDT || 0,
+          isSpot: false,
+          isInUSD: false,
+          totalFlag: false,
           btc: 0,
           eth: 0,
           sol: 0,
@@ -502,6 +580,9 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
         {
           id: uuidV4(),
           name: `${name} USD(S) (In USD)`,
+          isSpot: false,
+          isInUSD: true,
+          totalFlag: true,
           total: accountUsdsMAssets?.USDT || 0,
           usdt: accountUsdsMAssets?.USDT || 0,
           btc: 0,
@@ -509,27 +590,12 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
           sol: 0,
           avax: 0,
         },
-      ]
-        .filter((el) => {
-          if (
-            el.total ||
-            el.usdt ||
-            el.btc ||
-            el.eth ||
-            el.sol ||
-            el.avax
-          ) {
-            return true;
-          }
-          return false;
-        })
-        .map((el) => {
-          if (el.total !== undefined) {
-            el.total = el.usdt + el.btc + el.eth + el.sol + el.avax;
-            return { ...el, totalFlag: true };
-          }
-          return el;
-        }),
+      ].map((el) => {
+        if (el.totalFlag && el.isInUSD) {
+          el.total = el.usdt + el.btc + el.eth + el.sol + el.avax;
+        }
+        return el;
+      }),
     );
 
     positions.push(
