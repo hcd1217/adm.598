@@ -308,11 +308,11 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
     id: uuidV4(),
     name: "Total Hedge Accounts Spot Assets",
     total: 0,
-    usdt: 0,
-    btc: 0,
-    eth: 0,
-    sol: 0,
-    avax: 0,
+    usdt: cobo.USDT,
+    btc: cobo.BTC,
+    eth: cobo.ETH,
+    sol: cobo.SOL,
+    avax: cobo.AVAX,
   };
 
   assets.filter((asset) => asset.isSpot).forEach((asset) => {
@@ -543,7 +543,7 @@ export async function getHedgeAccountData(): Promise<HedgeAccountData> {
         {
           id: uuidV4(),
           name: `${name} Coin(M)`,
-          isSpot: false,
+          isSpot: true,
           isInUSD: false,
           totalFlag: false,
           usdt: 0,
